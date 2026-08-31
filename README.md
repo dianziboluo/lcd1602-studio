@@ -40,7 +40,20 @@ Windows 10/11
 可选数据源:状态条点「HWiNFO · 点击安装引导」,安装 HWiNFO64 并启用 Shared Memory Support
 (本工具只读其公开共享内存接口,不捆绑任何 HWiNFO 组件,详见 THIRD_PARTY_LICENSES.md)。
 
-## 接线(真屏)
+## 硬件(本项目实测配置,详见 [HARDWARE.md](HARDWARE.md))
+
+| 部件 | 型号 | 说明 |
+|---|---|---|
+| 开发板 | **合宙 CORE ESP32-C3** | ESP32-C3 单核,板载 CH343 串口,LED D4=GPIO12 |
+| 显示屏 | **LCD1602A**(蓝屏白字) | HD44780 兼容,16×2,5x7 点阵,无 ℃ 字形(CGRAM 自定义) |
+| 转接板 | **PCF8574 I2C 转接板**(55782 款) | 默认 0x27,板上蓝色电位器=对比度 |
+| 主机 | **AMD Ryzen 7 8845HS + Radeon 780M 核显** 笔记本 | 移动 Zen4;Tctl 需 HWiNFO;本机无风扇传感器 |
+| 供电 | 整机统一 **3.3V**(ESP32 GPIO 非 5V 容忍) | 勿接 5V |
+
+> 完整实测配置/针脚/工具链版本/踩坑记录 → [HARDWARE.md](HARDWARE.md)
+> (烧录时按住 BOOT、库要用 `begin()` 不用 `init()`、CGRAM 位序、℃ 之谜…… 全在里面)
+
+### 接线(真屏)
 
 | 转接板 | ESP32-C3 | 针脚 |
 |---|---|---|
@@ -76,6 +89,7 @@ lcd1602-studio/
 ├── monitor/     旧版命令行主机(monitor.cs, 协议兼容, 可继续用于固定排版)
 ├── docs/        截图
 ├── LICENSE              MIT
+├── HARDWARE.md          实测硬件清单(作者整套配置/接线/坑)
 └── THIRD_PARTY_LICENSES.md
 ```
 
