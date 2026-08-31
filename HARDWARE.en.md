@@ -44,7 +44,7 @@ voltage) may change the results — please check this list before opening an iss
 
 | Item | Tested value |
 |---|---|
-| Model | **LCD1602A** (blue backlight / white text) |
+| Model | **LCD1602A** (actually assembled: yellow-green backlight / black text; 3.3V blue and 5V yellow variants also in the kit) |
 | Controller | **HD44780-compatible** (ST7066U-class) |
 | Spec | 16 columns × 2 rows, 5x7 dot matrix glyphs |
 | Power | this project runs the whole module at **3.3V** (a 3.3V blue version / 5V yellow version also exist) |

@@ -57,13 +57,21 @@ does not bundle any HWiNFO component (see THIRD_PARTY_LICENSES.md).
 | Part | Model | Notes |
 |---|---|---|
 | Dev board | **合宙/LuatOS CORE ESP32-C3** | ESP32-C3 single core, onboard CH343 USB-UART, LED D4=GPIO12 |
-| Display | **LCD1602A** (blue/white) | HD44780-compatible, 16×2, 5x7 dots, no ℃ glyph in ROM (custom CGRAM) |
+| Display | **LCD1602A** (tested: yellow-green backlight/black text; blue & 3.3V variants also available) | HD44780-compatible, 16×2, 5x7 dots, no ℃ glyph in ROM (custom CGRAM) |
 | Adapter | **PCF8574 I2C adapter** (55782 kit) | Default 0x27, blue contrast potentiometer on board |
 | Host PC | **AMD Ryzen 7 8845HS + Radeon 780M iGPU** laptop | mobile Zen4; Tctl requires HWiNFO; no fan sensor on this machine |
 | Power | everything at **3.3V** (ESP32-C3 GPIOs are not 5V tolerant) | do not use 5V |
 
 > Full tested config / pin map / toolchain versions / pitfall log → [HARDWARE.en.md](HARDWARE.en.md)
 > (hold BOOT to flash, use `begin()` not `init()` in the LCD lib, CGRAM bit order, the ℃ mystery…)
+
+### Real hardware photo (author's bench)
+
+![Assembled: ESP32-C3 + PCF8574 adapter + LCD1602A (yellow-green backlight, custom template)](docs/hardware_real.jpg)
+
+Above: a USB-powered ESP32-C3 (left; its onboard OLED is unused here) drives a PCF8574
+adapter → yellow-green LCD1602A, displaying the user's custom template
+`CPU 02% RAM 61% / SOC 42° GPU 01%` (two-digit zero padding, ° from ROM).
 
 ### Wiring (real LCD)
 
