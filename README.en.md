@@ -33,6 +33,8 @@ PC side LCD1602Studio.exe (C#/WinForms, zero installs, compiled with Windows bui
 - **Variable slots**: `{cpu}` `{soc}` `{gpu}` `{ram}` `{fan}` `{temp}` + any HWiNFO reading;
   numbers are zero-padded to two digits (06) to avoid layout jitter; `--` means unavailable
 - **Presets**: save/load/delete whole templates (two lines + scroll + backlight)
+- **Tray background**: clicking X minimizes to the notification area (double-click to restore,
+  right-click to quit) — the app keeps running and syncing the real display
 - **Zero install**: built with the .NET Framework compiler that ships with Windows — no SDK, no runtime
 
 > Real screenshot:

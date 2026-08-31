@@ -41,6 +41,8 @@ internal class MainForm : Form
     private Panel _tabsHost;
     private Label _titleLabel;
     private Timer _timer;
+    private NotifyIcon _tray;
+    private bool _reallyClose, _trayHintShown;
     private int _focusedRow, _hoverVar = -1, _tabMode;   // 0 全部 1 内置 2 HWiNFO
     private int _saveFlashUntil;
     private readonly bool _selftest;
@@ -80,9 +82,90 @@ internal class MainForm : Form
         }
 
         FormClosing += (s, e) => SaveSettings();
-        FormClosed += (s, e) => { _eng.Dispose(); _sync.Dispose(); CurrentRowInserter = null; };
+        FormClosed += (s, e) =>
+        {
+            _eng.Dispose();
+            _sync.Dispose();
+            CurrentRowInserter = null;
+            if (_tray != null) { _tray.Visible = false; _tray.Dispose(); _tray = null; }
+        };
         CurrentRowInserter = token => { InsertToken(CurrentBox(), "{" + token + "}"); Render(); };
+        InitTray();
         Shown += (s, e) => { LayoutLcd(); LayoutEditor(); Render(); _search.Focus(); };
+    }
+
+    // 点 X → 缩到右下角托盘, 后台继续运行/同步; 托盘右键可退出
+    private void InitTray()
+    {
+        _tray = new NotifyIcon();
+        _tray.Icon = MakeTrayIcon();
+        _tray.Text = "LCD1602 Studio — 桌上的一点光";
+        ContextMenuStrip m = new ContextMenuStrip();
+        ToolStripMenuItem show = new ToolStripMenuItem("显示主窗口");
+        show.Click += (s, e) => RestoreFromTray();
+        ToolStripMenuItem quit = new ToolStripMenuItem("退出");
+        quit.Click += (s, e) => { _reallyClose = true; Close(); };
+        m.Items.Add(show);
+        m.Items.Add(new ToolStripSeparator());
+        m.Items.Add(quit);
+        _tray.ContextMenuStrip = m;
+        _tray.DoubleClick += (s, e) => RestoreFromTray();
+    }
+
+    private void RestoreFromTray()
+    {
+        Show();
+        WindowState = FormWindowState.Normal;
+        Activate();
+        ShowInTaskbar = true;
+        _tray.Visible = false;
+    }
+
+    private static Icon MakeTrayIcon()
+    {
+        Bitmap b = new Bitmap(16, 16);
+        using (Graphics g = Graphics.FromImage(b))
+        {
+            g.Clear(Color.Transparent);
+            using (SolidBrush bd = new SolidBrush(Color.FromArgb(24, 25, 28)))
+                g.FillRectangle(bd, 1, 3, 14, 10);
+            using (SolidBrush bg = new SolidBrush(Color.FromArgb(120, 180, 255)))
+                g.FillRectangle(bg, 2, 4, 12, 8);
+            using (SolidBrush lit = new SolidBrush(Color.FromArgb(232, 247, 255)))
+            {
+                g.FillRectangle(lit, 4, 6, 3, 1);
+                g.FillRectangle(lit, 8, 6, 4, 1);
+                g.FillRectangle(lit, 4, 9, 3, 1);
+                g.FillRectangle(lit, 8, 9, 4, 1);
+            }
+        }
+        IntPtr h = b.GetHicon();
+        Icon ic = (Icon)Icon.FromHandle(h).Clone();
+        DestroyIcon(h);
+        b.Dispose();
+        return ic;
+    }
+
+    [System.Runtime.InteropServices.DllImport("user32.dll")]
+    private static extern bool DestroyIcon(IntPtr hIcon);
+
+    protected override void OnFormClosing(FormClosingEventArgs e)
+    {
+        if (!_reallyClose && e.CloseReason == CloseReason.UserClosing)
+        {
+            e.Cancel = true;
+            Hide();
+            ShowInTaskbar = false;
+            _tray.Visible = true;
+            if (!_trayHintShown)
+            {
+                _trayHintShown = true;
+                _tray.ShowBalloonTip(2000, "LCD1602 Studio",
+                    "已缩到右下角托盘,后台继续运行与同步。双击图标恢复窗口。", ToolTipIcon.Info);
+            }
+            return;
+        }
+        base.OnFormClosing(e);
     }
 
     public Lcd1602Control.BacklightKind CurrentBacklight { get { return _lcd.Backlight; } }
