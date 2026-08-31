@@ -1,5 +1,7 @@
 # LCD1602 Studio
 
+**English → [README.en.md](README.en.md)** · 中文版见本文件
+
 桌面端 **1602 液晶屏工作台** —— 在电脑上模拟一块真实的 HD44780 1602 屏(5x7 点阵、蓝/绿背光、走马灯),
 编辑两行内容(自由文本 + 实时变量),**所见即所得地同步到 ESP32-C3 + LCD1602 真屏**。
 
@@ -40,7 +42,7 @@ Windows 10/11
 可选数据源:状态条点「HWiNFO · 点击安装引导」,安装 HWiNFO64 并启用 Shared Memory Support
 (本工具只读其公开共享内存接口,不捆绑任何 HWiNFO 组件,详见 THIRD_PARTY_LICENSES.md)。
 
-## 硬件(本项目实测配置,详见 [HARDWARE.md](HARDWARE.md))
+## 硬件(本项目实测配置,详见 [HARDWARE.md](HARDWARE.md) / [HARDWARE.en.md](HARDWARE.en.md))
 
 | 部件 | 型号 | 说明 |
 |---|---|---|
@@ -89,7 +91,8 @@ lcd1602-studio/
 ├── monitor/     旧版命令行主机(monitor.cs, 协议兼容, 可继续用于固定排版)
 ├── docs/        截图
 ├── LICENSE              MIT
-├── HARDWARE.md          实测硬件清单(作者整套配置/接线/坑)
+├── README.en.md          英文文档
+├── HARDWARE.md / HARDWARE.en.md  实测硬件清单(中/英)
 └── THIRD_PARTY_LICENSES.md
 ```
 
