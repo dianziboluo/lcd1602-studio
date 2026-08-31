@@ -1,0 +1,14 @@
+bin/
+build/
+lib/
+*.exe
+*.pdb
+*.zip
+*.7z
+*.rar
+*.o
+*.d
+.vs/
+.idea/
+*.user
+Thumbs.db
