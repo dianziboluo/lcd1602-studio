@@ -72,25 +72,23 @@ internal static class VarPainter
 {
     public static Color Accent(Lcd1602Control.BacklightKind k)
     {
-        if (k == Lcd1602Control.BacklightKind.Green) return Color.FromArgb(127, 211, 90);
-        if (k == Lcd1602Control.BacklightKind.Off) return Color.FromArgb(138, 146, 156);
-        return Color.FromArgb(111, 180, 255);
+        return UiTheme.Accent(k);
     }
 
     public static Color BadgeBack(BadgeKind b)
     {
-        if (b == BadgeKind.Temp) return Color.FromArgb(110, 74, 30);
-        if (b == BadgeKind.Fan) return Color.FromArgb(30, 90, 110);
-        if (b == BadgeKind.Usage) return Color.FromArgb(90, 62, 126);
-        return Color.FromArgb(63, 74, 90);
+        if (b == BadgeKind.Temp) return Color.FromArgb(96, 66, 30);
+        if (b == BadgeKind.Fan) return Color.FromArgb(28, 78, 96);
+        if (b == BadgeKind.Usage) return Color.FromArgb(78, 56, 110);
+        return Color.FromArgb(56, 64, 76);
     }
 
     public static Color BadgeText(BadgeKind b)
     {
-        if (b == BadgeKind.Temp) return Color.FromArgb(255, 217, 160);
-        if (b == BadgeKind.Fan) return Color.FromArgb(184, 240, 255);
-        if (b == BadgeKind.Usage) return Color.FromArgb(224, 200, 255);
-        return Color.FromArgb(200, 212, 224);
+        if (b == BadgeKind.Temp) return Color.FromArgb(255, 214, 160);
+        if (b == BadgeKind.Fan) return Color.FromArgb(178, 234, 250);
+        if (b == BadgeKind.Usage) return Color.FromArgb(218, 198, 255);
+        return Color.FromArgb(206, 214, 226);
     }
 
     public static string BadgeLabel(BadgeKind b)
@@ -141,22 +139,22 @@ internal static class VarPainter
         string unit = item.Unit == null ? "" : item.Unit.Trim();
         SizeF vs = g.MeasureString(val, valFont);
         float vx = r.Right - 12 - vs.Width - (unit.Length > 0 ? g.MeasureString(unit, valFont).Width + 6 : 0);
-        g.DrawString(val, valFont, new SolidBrush(missing ? Color.FromArgb(106, 112, 120) : Color.FromArgb(232, 236, 242)), vx, r.Y + (r.Height - vs.Height) / 2 + 1);
+        g.DrawString(val, valFont, new SolidBrush(missing ? UiTheme.TextFaint : UiTheme.Text), vx, r.Y + (r.Height - vs.Height) / 2 + 1);
         if (unit.Length > 0)
-            g.DrawString(unit, valFont, new SolidBrush(Color.FromArgb(138, 146, 156)), r.Right - 12 - g.MeasureString(unit, valFont).Width, r.Y + (r.Height - vs.Height) / 2 + 1);
+            g.DrawString(unit, valFont, new SolidBrush(UiTheme.TextDim), r.Right - 12 - g.MeasureString(unit, valFont).Width, r.Y + (r.Height - vs.Height) / 2 + 1);
 
-        g.DrawString(item.Name, nameFont, new SolidBrush(Color.FromArgb(214, 220, 228)), nameX, r.Y + (r.Height - nameFont.Height) / 2 + 1);
+        g.DrawString(item.Name, nameFont, new SolidBrush(UiTheme.Text), nameX, r.Y + (r.Height - nameFont.Height) / 2 + 1);
     }
 
     /// <summary>绘制分组头: ▸/▾ 箭头 + 标题 + 右侧项数</summary>
     public static void DrawGroupRow(Graphics g, Rectangle r, VarItem grp, Font nameFont)
     {
-        g.FillRectangle(new SolidBrush(Color.FromArgb(36, 38, 44)), r);
-        g.DrawString(grp.Collapsed ? "▸" : "▾", nameFont, new SolidBrush(VarPainter.Accent3(grp.GroupIndex)), r.X + 8, r.Y + (r.Height - nameFont.Height) / 2 + 1);
-        g.DrawString(grp.Name, nameFont, new SolidBrush(Color.FromArgb(180, 186, 194)), r.X + 26, r.Y + (r.Height - nameFont.Height) / 2 + 1);
+        g.FillRectangle(new SolidBrush(UiTheme.SurfaceAlt), r);
+        g.DrawString(grp.Collapsed ? "▸" : "▾", nameFont, new SolidBrush(Accent3(grp.GroupIndex)), r.X + 8, r.Y + (r.Height - nameFont.Height) / 2 + 1);
+        g.DrawString(grp.Name, nameFont, new SolidBrush(UiTheme.TextDim), r.X + 26, r.Y + (r.Height - nameFont.Height) / 2 + 1);
         string count = grp.Count.ToString();
         SizeF cs = g.MeasureString(count, nameFont);
-        g.DrawString(count, nameFont, new SolidBrush(Color.FromArgb(110, 116, 124)), r.Right - 12 - cs.Width, r.Y + (r.Height - cs.Height) / 2 + 1);
+        g.DrawString(count, nameFont, new SolidBrush(UiTheme.TextFaint), r.Right - 12 - cs.Width, r.Y + (r.Height - cs.Height) / 2 + 1);
     }
 
     private static Color Accent3(int groupIndex)

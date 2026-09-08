@@ -13,7 +13,7 @@ if not exist lib\LibreHardwareMonitorLib.dll (
     /r:System.dll /r:System.Drawing.dll /r:System.Windows.Forms.dll ^
     /r:System.Management.dll /r:System.Web.Extensions.dll ^
     /r:lib\LibreHardwareMonitorLib.dll ^
-    fontdata.cs Lcd1602.cs HwInfo.cs DataEngine.cs DataPalette.cs SerialSync.cs GlyphForm.cs PresetForm.cs MainForm.cs ^
+    UiTheme.cs fontdata.cs Lcd1602.cs HwInfo.cs DataEngine.cs DataPalette.cs SerialSync.cs GlyphForm.cs PresetForm.cs MainForm.cs ^
     Modules\IModule.cs Modules\ModuleHost.cs Modules\TcpInfo.cs Modules\DshModule.cs Modules\DsModule.cs
 
 if exist LCD1602Studio.exe (echo OK: LCD1602Studio.exe) else (echo BUILD FAILED)

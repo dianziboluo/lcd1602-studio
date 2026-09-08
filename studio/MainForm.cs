@@ -37,10 +37,12 @@ internal class MainForm : Form
     private TextBox _tb0, _tb1, _search;
     private CheckBox _chk0, _chk1;
     private ListBox _vars;
-    private Label _lhmStatus, _hwStatus, _footer, _modStatus;
-    private Button _btnBack, _tabAll, _tabBuiltin, _tabHw, _btnCollapse, _btnSave, _btnSync, _btnPreset, _btnGlyph;
+    private Label _lhmStatus, _hwStatus, _footer, _modStatus, _titleLabel, _warn;
+    private UiButton _btnBack, _tabAll, _tabBuiltin, _tabHw, _btnCollapse, _btnSave, _btnSync, _btnPreset, _btnGlyph;
     private Panel _tabsHost;
-    private Label _titleLabel;
+    private UiField _field0, _field1;
+    private string _varSig = "";
+    private int _warnUntil;
     private Timer _timer;
     private NotifyIcon _tray;
     private bool _reallyClose, _trayHintShown;
@@ -53,16 +55,18 @@ internal class MainForm : Form
     private static readonly string[] GrpTitles = { "常用", "HWiNFO · 温度", "HWiNFO · 风扇", "HWiNFO · 占用", "字形 · 拖到屏上", "DSH", "DeepSeek" };
 
     private const int RowLabelW = 48, RowBoxX = 66, RowChkW = 64, RowBtnW = 92, RowH = 52;
+    private const int VarHostW = 340;
 
     public MainForm(bool selftest)
     {
         _selftest = selftest;
         Text = "LCD1602 Studio — 桌上的一点光";
-        ClientSize = new Size(980, 660);
-        MinimumSize = new Size(860, 580);
-        BackColor = Color.FromArgb(27, 28, 32);
-        ForeColor = Color.FromArgb(224, 226, 230);
-        Font = new Font("Microsoft YaHei UI", 9.5f);
+        ClientSize = new Size(1280, 800);
+        MinimumSize = new Size(1120, 720);
+        BackColor = UiTheme.Bg;
+        ForeColor = UiTheme.Text;
+        Font = UiTheme.FontUi;
+        DoubleBuffered = true;
 
         BuildUI();
         LoadSettings();
@@ -187,37 +191,42 @@ internal class MainForm : Form
     {
         _statusBar = new Panel();
         _statusBar.Dock = DockStyle.Bottom;
-        _statusBar.Height = 38;
-        _statusBar.BackColor = Color.FromArgb(20, 21, 24);
+        _statusBar.Height = 42;
+        _statusBar.BackColor = Color.FromArgb(17, 18, 21);
+        _statusBar.Paint += (s, e) =>
+        {
+            using (Pen p = new Pen(UiTheme.Border))
+                e.Graphics.DrawLine(p, 0, 0, _statusBar.Width, 0);
+        };
 
         _lhmStatus = NewStatusLabel();
-        _lhmStatus.Location = new Point(12, 9);
+        _lhmStatus.Location = new Point(16, 12);
         _statusBar.Controls.Add(_lhmStatus);
         _hwStatus = NewStatusLabel();
-        _hwStatus.Location = new Point(400, 9);
+        _hwStatus.Location = new Point(420, 12);
         _hwStatus.Cursor = Cursors.Hand;
         _hwStatus.Click += (s, e) => OpenHwGuide();
         _statusBar.Controls.Add(_hwStatus);
 
         _modStatus = NewStatusLabel();
-        _modStatus.Location = new Point(760, 9);
+        _modStatus.Location = new Point(800, 12);
         _statusBar.Controls.Add(_modStatus);
 
-        // ---- 数据台(子面板 Dock: 列表先加, 标题最后加) ----
+        // ---- 数据台 ----
         _varHost = new Panel();
         _varHost.Dock = DockStyle.Right;
-        _varHost.Width = 312;
-        _varHost.BackColor = Color.FromArgb(28, 29, 34);
-        _varHost.Padding = new Padding(10, 8, 10, 4);
+        _varHost.Width = 340;
+        _varHost.BackColor = UiTheme.Surface;
+        _varHost.Padding = new Padding(12, 10, 12, 6);
         Controls.Add(_varHost);
 
         _vars = new ListBox();
         _vars.Dock = DockStyle.Fill;
         _vars.DrawMode = DrawMode.OwnerDrawFixed;
-        _vars.ItemHeight = 30;
-        _vars.BackColor = Color.FromArgb(28, 29, 34);
+        _vars.ItemHeight = 32;
+        _vars.BackColor = UiTheme.Surface;
         _vars.BorderStyle = BorderStyle.None;
-        _vars.Font = new Font("Microsoft YaHei UI", 9f);
+        _vars.Font = UiTheme.FontUi;
         _vars.DrawItem += DrawVarRow;
         _vars.MouseMove += (s, e) =>
         {
@@ -239,75 +248,77 @@ internal class MainForm : Form
             }
         };
         _varHost.Controls.Add(_vars);   // Fill 先加
+        SetDoubleBuffered(_vars);       // 消除自绘列表每秒重绘的闪动
 
         _footer = new Label();
         _footer.Text = "点行即插入当前行 · 值为实时预览";
         _footer.Dock = DockStyle.Bottom;
-        _footer.Height = 22;
-        _footer.ForeColor = Color.FromArgb(120, 126, 134);
-        _footer.Font = new Font("Microsoft YaHei UI", 8f);
+        _footer.Height = 24;
+        _footer.ForeColor = UiTheme.TextFaint;
+        _footer.Font = UiTheme.FontUiSmall;
         _footer.TextAlign = ContentAlignment.MiddleLeft;
-        _footer.BackColor = Color.FromArgb(20, 21, 24);
+        _footer.BackColor = UiTheme.Surface;
         _varHost.Controls.Add(_footer);
 
         _search = new TextBox();
         _search.Dock = DockStyle.Top;
-        _search.Font = new Font("Microsoft YaHei UI", 9.5f);
-        _search.BackColor = Color.FromArgb(38, 40, 46);
-        _search.ForeColor = Color.FromArgb(235, 238, 242);
+        _search.Height = 30;
+        _search.Font = UiTheme.FontUi;
+        _search.BackColor = UiTheme.SurfaceAlt;
+        _search.ForeColor = UiTheme.Text;
         _search.BorderStyle = BorderStyle.FixedSingle;
         _search.TextChanged += (s, e) => RefreshVarList();
         _varHost.Controls.Add(_search);
 
         Panel tabsHost = new Panel();
         tabsHost.Dock = DockStyle.Top;
-        tabsHost.Height = 34;
+        tabsHost.Height = 40;
+        tabsHost.BackColor = UiTheme.Surface;
         _varHost.Controls.Add(tabsHost);
         _tabsHost = tabsHost;
         _tabAll = MakeTab("全部", 0, tabsHost, 0);
-        _tabBuiltin = MakeTab("内置", 1, tabsHost, 70);
-        _tabHw = MakeTab("HWiNFO", 2, tabsHost, 140);
+        _tabBuiltin = MakeTab("内置", 1, tabsHost, 78);
+        _tabHw = MakeTab("HWiNFO", 2, tabsHost, 156);
 
         Panel titleBar = new Panel();
         titleBar.Dock = DockStyle.Top;
-        titleBar.Height = 26;
-        titleBar.BackColor = _varHost.BackColor;
+        titleBar.Height = 30;
+        titleBar.BackColor = UiTheme.Surface;
         _varHost.Controls.Add(titleBar);   // 最后加 = 最先 Dock
         _titleLabel = new Label();
         _titleLabel.Text = "数据台";
-        _titleLabel.Location = new Point(0, 2);
+        _titleLabel.Location = new Point(0, 5);
         _titleLabel.AutoSize = true;
-        _titleLabel.Font = new Font("Microsoft YaHei UI", 9.5f, FontStyle.Bold);
+        _titleLabel.Font = UiTheme.FontUiBold;
+        _titleLabel.ForeColor = UiTheme.Text;
         titleBar.Controls.Add(_titleLabel);
-        _btnCollapse = FlatBtn("◀", 30);
-        _btnCollapse.Location = new Point(270, 1);
-        _btnCollapse.Size = new Size(30, 22);
+        _btnCollapse = new UiButton("◀", 30, 24);
+        _btnCollapse.Location = new Point(284, 2);
         _btnCollapse.Click += (s, e) => { _varsCollapsed = !_varsCollapsed; ApplyVarCollapse(); };
         titleBar.Controls.Add(_btnCollapse);
 
         // ---- 屏 ----
         _host = new Panel();
         _host.Dock = DockStyle.Top;
-        _host.Height = 272;
-        _host.BackColor = BackColor;
+        _host.Height = 300;
+        _host.BackColor = UiTheme.Bg;
         _host.Resize += (s, e) => LayoutLcd();
 
         _lcd = new Lcd1602Control();
-        _lcd.BackColor = BackColor;
+        _lcd.BackColor = UiTheme.Bg;
         _lcd.GlyphDropped += OnGlyphDropped;
         _host.Controls.Add(_lcd);
 
-        _btnBack = FlatBtn("背光 · 蓝", 96) ;
-        _btnBack.Size = new Size(96, 28);
+        _btnBack = new UiButton("背光 · 蓝", 108, 30);
         _btnBack.Click += (s, e) =>
         {
             switch (_lcd.Backlight)
             {
-                case Lcd1602Control.BacklightKind.Blue: _lcd.Backlight = Lcd1602Control.BacklightKind.Green; _btnBack.Text = BacklightText(_lcd.Backlight); break;
-                case Lcd1602Control.BacklightKind.Green: _lcd.Backlight = Lcd1602Control.BacklightKind.Off; _btnBack.Text = BacklightText(_lcd.Backlight); break;
-                default: _lcd.Backlight = Lcd1602Control.BacklightKind.Blue; _btnBack.Text = BacklightText(_lcd.Backlight); break;
+                case Lcd1602Control.BacklightKind.Blue: _lcd.Backlight = Lcd1602Control.BacklightKind.Green; break;
+                case Lcd1602Control.BacklightKind.Green: _lcd.Backlight = Lcd1602Control.BacklightKind.Off; break;
+                default: _lcd.Backlight = Lcd1602Control.BacklightKind.Blue; break;
             }
-            RefreshVarList();
+            ApplyAccent();
         };
         _host.Controls.Add(_btnBack);
 
@@ -326,7 +337,7 @@ internal class MainForm : Form
         _tb0 = MakeRow(0, "行1", out _chk0);
         _tb1 = MakeRow(1, "行2", out _chk1);
 
-        _btnSave = FlatBtn("保存设置", 96);
+        _btnSave = new UiButton("保存设置", 100, 30);
         _btnSave.Click += (s, e) =>
         {
             SaveSettings();
@@ -335,30 +346,31 @@ internal class MainForm : Form
         };
         _editor.Controls.Add(_btnSave);
 
-        _btnSync = FlatBtn("同步到真屏: 未连接", 172);
+        _btnSync = new UiButton("同步到真屏: 未连接", 190, 30);
         _btnSync.Click += (s, e) =>
         {
             if (_sync.Connected)
             {
                 _sync.Disconnect();
                 _btnSync.Text = "同步到真屏: 未连接";
-                _btnSync.BackColor = Color.FromArgb(58, 60, 66);
+                _btnSync.Active = false;
             }
             else if (_sync.Connect())
             {
                 for (int i = 0; i < 8; i++) _sync.SendSlot(i);   // 同步全部自定义字形
                 _btnSync.Text = "同步到真屏: 已同步 " + _sync.PortName;
-                _btnSync.BackColor = Color.FromArgb(38, 84, 48);
+                _btnSync.Active = true;
             }
             else
             {
                 _btnSync.Text = "同步到真屏: 未找到串口";
-                _btnSync.BackColor = Color.FromArgb(88, 68, 28);
+                _btnSync.Active = false;
             }
+            _btnSync.Invalidate();
         };
         _editor.Controls.Add(_btnSync);
 
-        _btnPreset = FlatBtn("预设", 72);
+        _btnPreset = new UiButton("预设", 80, 30);
         _btnPreset.Click += (s, e) =>
         {
             using (PresetForm f = new PresetForm(ListPresets, LoadPreset, SavePreset, DeletePreset))
@@ -366,7 +378,7 @@ internal class MainForm : Form
         };
         _editor.Controls.Add(_btnPreset);
 
-        _btnGlyph = FlatBtn("点阵编辑器", 100);
+        _btnGlyph = new UiButton("点阵编辑器", 108, 30);
         _btnGlyph.Click += (s, e) =>
         {
             using (GlyphForm f = new GlyphForm(1, slot =>
@@ -376,14 +388,37 @@ internal class MainForm : Form
             }))
                 f.ShowDialog(this);
             SaveSettings();
+            RefreshVarList();
         };
         _editor.Controls.Add(_btnGlyph);
+
+        // 非 ASCII 输入提示(1602 物理上只支持 ASCII)
+        _warn = new Label();
+        _warn.Text = "⚠ 1602 只支持 ASCII 字符(℃ 与 ° 例外),已自动忽略其它非 ASCII 输入";
+        _warn.AutoSize = true;
+        _warn.ForeColor = UiTheme.Warn;
+        _warn.Font = UiTheme.FontUiSmall;
+        _warn.Visible = false;
+        _editor.Controls.Add(_warn);
+
+        ApplyAccent();
     }
 
-    private Button MakeTab(string text, int mode, Panel tabs, int x)
+    /// <summary>强调色跟随背光: 按钮/数据台/标题一起变</summary>
+    private void ApplyAccent()
     {
-        Button b = FlatBtn(text, 66);
-        b.Location = new Point(x, 3);
+        Color accent = UiTheme.Accent(_lcd.Backlight);
+        UiButton[] bs = { _btnBack, _tabAll, _tabBuiltin, _tabHw, _btnCollapse, _btnSave, _btnSync, _btnPreset, _btnGlyph };
+        foreach (UiButton b in bs) b.SetAccent(accent);
+        _btnBack.Text = BacklightText(_lcd.Backlight);
+        StyleTabs();
+        _vars.Invalidate();
+    }
+
+    private UiButton MakeTab(string text, int mode, Panel tabs, int x)
+    {
+        UiButton b = new UiButton(text, 72, 30);
+        b.Location = new Point(x, 5);
         b.Tag = mode;
         b.Click += (s, e) => { _tabMode = mode; StyleTabs(); RefreshVarList(); };
         tabs.Controls.Add(b);
@@ -392,22 +427,12 @@ internal class MainForm : Form
 
     private void StyleTabs()
     {
-        Button[] bs = { _tabAll, _tabBuiltin, _tabHw };
-        Color accent = VarPainter.Accent(_lcd.Backlight);
-        foreach (Button b in bs)
+        UiButton[] bs = { _tabAll, _tabBuiltin, _tabHw };
+        foreach (UiButton b in bs)
         {
-            int m = (int)b.Tag;
-            b.BackColor = m == _tabMode ? Mix(accent, Color.FromArgb(58, 60, 66), 0.32f) : Color.FromArgb(58, 60, 66);
-            b.ForeColor = m == _tabMode ? Color.White : Color.FromArgb(190, 193, 200);
+            b.Active = (int)b.Tag == _tabMode;
+            b.Invalidate();
         }
-    }
-
-    private static Color Mix(Color a, Color b, float k)
-    {
-        return Color.FromArgb(
-            (int)(a.R * k + b.R * (1 - k)),
-            (int)(a.G * k + b.G * (1 - k)),
-            (int)(a.B * k + b.B * (1 - k)));
     }
 
     private static string BacklightText(Lcd1602Control.BacklightKind k)
@@ -417,101 +442,155 @@ internal class MainForm : Form
         return "背光 · 蓝";
     }
 
-    private static Button FlatBtn(string text, int w)
+    /// <summary>给控件开启双缓冲(消除自绘控件闪动)</summary>
+    private static void SetDoubleBuffered(Control c)
     {
-        Button b = new Button();
-        b.Text = text;
-        b.Size = new Size(w, 26);
-        b.FlatStyle = FlatStyle.Flat;
-        b.FlatAppearance.BorderColor = Color.FromArgb(90, 96, 106);
-        b.BackColor = Color.FromArgb(58, 60, 66);
-        b.ForeColor = Color.FromArgb(230, 232, 236);
-        return b;
+        try
+        {
+            typeof(Control).GetProperty("DoubleBuffered",
+                System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+                .SetValue(c, true, null);
+        }
+        catch { }
     }
 
     private Label NewStatusLabel()
     {
         Label l = new Label();
         l.AutoSize = true;
-        l.Font = new Font("Microsoft YaHei UI", 9f);
-        l.ForeColor = Color.FromArgb(190, 193, 200);
+        l.Font = UiTheme.FontUiSmall;
+        l.ForeColor = UiTheme.TextDim;
         return l;
     }
 
     private TextBox MakeRow(int row, string caption, out CheckBox chk)
     {
-        int y = 52 + row * RowH;   // 顶部 36px 留给 [保存][同步] 按钮条
+        int y = 56 + row * RowH;   // 顶部 46px 留给按钮条
 
         Label lab = new Label();
         lab.Text = caption;
-        lab.Location = new Point(14, y + 4);
-        lab.Size = new Size(RowLabelW, 24);
-        lab.ForeColor = Color.FromArgb(190, 193, 200);
+        lab.Location = new Point(14, y + 8);
+        lab.Size = new Size(RowLabelW, 22);
+        lab.ForeColor = UiTheme.TextDim;
 
-        TextBox tb = new TextBox();
-        tb.Location = new Point(RowBoxX, y);
-        tb.Font = new Font("Consolas", 11f);
-        tb.BackColor = Color.FromArgb(22, 23, 27);
-        tb.ForeColor = Color.FromArgb(235, 238, 242);
-        tb.BorderStyle = BorderStyle.FixedSingle;
+        UiField field = new UiField();
+        field.Location = new Point(RowBoxX, y);
+        field.Size = new Size(300, 38);
+        TextBox tb = field.Box;
         tb.GotFocus += (s, e) => _focusedRow = row;
         tb.KeyUp += (s, e) => Render();
+        tb.TextChanged += (s, e) => FilterAscii(tb);
+        if (row == 0) _field0 = field; else _field1 = field;
 
         CheckBox ck = new CheckBox();
         ck.Text = "滚动";
-        ck.Location = new Point(100, y + 5);
+        ck.Location = new Point(100, y + 9);
         ck.Size = new Size(RowChkW, 22);
-        ck.ForeColor = Color.FromArgb(190, 193, 200);
+        ck.ForeColor = UiTheme.TextDim;
+        ck.BackColor = Color.Transparent;
         ck.CheckedChanged += (s, e) =>
         {
             if (row == 0) _lcd.ScrollRow0 = ck.Checked; else _lcd.ScrollRow1 = ck.Checked;
         };
         chk = ck;
 
-        Button btn = FlatBtn("插入变量", RowBtnW);
-        btn.Location = new Point(100, y);
+        UiButton btn = new UiButton("插入变量", RowBtnW, 30);
+        btn.Location = new Point(100, y + 4);
         btn.Click += (s, e) => { _focusedRow = row; tb.Focus(); OpenPalette(); };
 
         _editor.Controls.Add(lab);
-        _editor.Controls.Add(tb);
+        _editor.Controls.Add(field);
         _editor.Controls.Add(ck);
         _editor.Controls.Add(btn);
         return tb;
     }
 
+    // ---------- 非 ASCII 过滤(1602 只支持 ASCII; ℃ 与 ° 例外) ----------
+
+    private static bool IsAsciiAllowed(char c)
+    {
+        return c < 128 || c == '\u2103' || c == '\u00B0';
+    }
+
+    /// <summary>过滤掉 1602 无法显示的字符(供自检直接测试)</summary>
+    internal static string FilterAsciiText(string s, out bool removed)
+    {
+        removed = false;
+        if (s == null) return "";
+        StringBuilder sb = new StringBuilder(s.Length);
+        foreach (char c in s)
+        {
+            if (IsAsciiAllowed(c)) sb.Append(c);
+            else removed = true;
+        }
+        return sb.ToString();
+    }
+
+    private bool _filtering;
+
+    private void FilterAscii(TextBox tb)
+    {
+        if (_filtering) return;
+        bool removed;
+        string clean = FilterAsciiText(tb.Text, out removed);
+        if (!removed) return;
+
+        int caret = tb.SelectionStart;
+        int newCaret = 0;
+        for (int i = 0; i < caret && i < tb.Text.Length; i++)
+            if (IsAsciiAllowed(tb.Text[i])) newCaret++;
+
+        _filtering = true;
+        tb.Text = clean;
+        tb.SelectionStart = Math.Min(newCaret, tb.Text.Length);
+        _filtering = false;
+
+        _warnUntil = Environment.TickCount + 4000;
+        _warn.Location = new Point(RowBoxX, Math.Max(2, _editor.ClientSize.Height - 28));
+        _warn.Visible = true;
+        Render();
+    }
+
     private void LayoutLcd()
     {
         if (_lcd == null) return;
-        int px = _lcd.PixelSize;
-        int w = 16 * 6 * px + 34;
-        int h = 2 * 8 * px + 40;
-        _lcd.Size = new Size(w, h);
-        _lcd.Location = new Point((_host.ClientSize.Width - w) / 2, 14);
-        _btnBack.Location = new Point(_host.ClientSize.Width - 120, 18);
+        // 屏尽可能大: 按可用宽度算点阵像素(向上取整), 上限 13
+        int avail = _host.ClientSize.Width - 40;
+        int px = (avail + 80) / 96;
+        if (px > 13) px = 13;
+        if (px < 5) px = 5;
+        while (px > 5 && Lcd1602Control.FrameSize(px).Width > _host.ClientSize.Width - 20) px--;
+        _lcd.PixelSize = px;
+        Size sz = Lcd1602Control.FrameSize(px);
+        _lcd.Size = sz;
+        _lcd.Location = new Point((_host.ClientSize.Width - sz.Width) / 2, 16);
+        _btnBack.Location = new Point(_host.ClientSize.Width - 128, 20);
+        int wantH = sz.Height + 84;
+        if (_host.Height != wantH && wantH > 180) _host.Height = wantH;
     }
 
     private void LayoutEditor()
     {
         if (_tb0 == null) return;
-        int tbW = _editor.ClientSize.Width - RowBoxX - 176;
-        if (tbW < 180) tbW = 180;
-        _tb0.Size = new Size(tbW, 30);
-        _tb0.Location = new Point(RowBoxX, 52);
-        _tb1.Size = new Size(tbW, 30);
-        _tb1.Location = new Point(RowBoxX, 52 + RowH);
+        int tbW = _editor.ClientSize.Width - RowBoxX - 200;
+        if (tbW < 220) tbW = 220;
+        _field0.Size = new Size(tbW, 38);
+        _field0.Location = new Point(RowBoxX, 56);
+        _field1.Size = new Size(tbW, 38);
+        _field1.Location = new Point(RowBoxX, 56 + RowH);
         if (_btnSave != null)
         {
-            _btnGlyph.Location = new Point(_editor.ClientSize.Width - 466, 14);
-            _btnPreset.Location = new Point(_editor.ClientSize.Width - 360, 14);
-            _btnSave.Location = new Point(_editor.ClientSize.Width - 282, 14);
-            _btnSync.Location = new Point(_editor.ClientSize.Width - 178, 14);
+            _btnGlyph.Location = new Point(_editor.ClientSize.Width - 494, 14);
+            _btnPreset.Location = new Point(_editor.ClientSize.Width - 378, 14);
+            _btnSave.Location = new Point(_editor.ClientSize.Width - 290, 14);
+            _btnSync.Location = new Point(_editor.ClientSize.Width - 182, 14);
         }
         foreach (Control c in _editor.Controls)
         {
-            if (c is TextBox || c == _btnSave || c == _btnSync || c == _btnPreset || c == _btnGlyph) continue;
-            if (c is Label) c.Location = new Point(14, c.Location.Y);
-            else if (c is CheckBox) { int y = c.Location.Y; c.Location = new Point(RowBoxX + tbW + 12, y); }
-            else if (c is Button) { int y = c.Location.Y; c.Location = new Point(RowBoxX + tbW + 84, y); }
+            if (c is UiField || c == _btnSave || c == _btnSync || c == _btnPreset || c == _btnGlyph) continue;
+            if (c is Label && c != _warn) c.Location = new Point(14, c.Location.Y);
+            else if (c is CheckBox) { int y = c.Location.Y; c.Location = new Point(RowBoxX + tbW + 14, y); }
+            else if (c is UiButton) { int y = c.Location.Y; c.Location = new Point(RowBoxX + tbW + 88, y); }
         }
     }
 
@@ -564,6 +643,24 @@ internal class MainForm : Form
 
         string q = _search == null ? "" : _search.Text.Trim().ToLowerInvariant();
         bool searching = q.Length > 0;
+
+        // 结构签名: 未变化则只重绘(刷新实时值), 不重建列表 —— 消除每秒闪动与滚动条跳动
+        StringBuilder sig = new StringBuilder();
+        sig.Append(_tabMode).Append('|').Append(q).Append('|');
+        for (int i = 0; i < _grpCollapsed.Length; i++) sig.Append(_grpCollapsed[i] ? '1' : '0');
+        sig.Append('|').Append(fanName).Append('|').Append(_eng.HwCount);
+        foreach (List<VarItem> g in groups)
+        {
+            sig.Append('#').Append(g.Count);
+            foreach (VarItem it in g) sig.Append(it.Token);
+        }
+        string signature = sig.ToString();
+        if (signature == _varSig)
+        {
+            _vars.Invalidate();   // 只刷新数值
+            return;
+        }
+        _varSig = signature;
 
         _vars.BeginUpdate();
         _vars.Items.Clear();
@@ -675,7 +772,7 @@ internal class MainForm : Form
 
     private void ApplyVarCollapse()
     {
-        _varHost.Width = _varsCollapsed ? 36 : 312;
+        _varHost.Width = _varsCollapsed ? 40 : VarHostW;
         bool show = !_varsCollapsed;
         _vars.Visible = show;
         _search.Visible = show;
@@ -798,15 +895,20 @@ internal class MainForm : Form
             _saveFlashUntil = 0;
             _btnSave.Text = "保存设置";
         }
+        if (_warnUntil != 0 && Environment.TickCount > _warnUntil)
+        {
+            _warnUntil = 0;
+            _warn.Visible = false;
+        }
     }
 
     private void UpdateStatus()
     {
-        _lhmStatus.ForeColor = _eng.LhmOk ? Color.FromArgb(120, 210, 120) : Color.FromArgb(225, 130, 110);
-        _lhmStatus.Text = _eng.LhmOk ? "数据引擎 · LHM ●  (CPU/SoC/内存/占用)" : "数据引擎 · LHM ○ 已切系统计数器兜底";
-        if (_eng.HwStateText.StartsWith("HWiNFO ●")) _hwStatus.ForeColor = Color.FromArgb(120, 210, 120);
-        else if (_eng.HwStateText.StartsWith("HWiNFO 已运行")) _hwStatus.ForeColor = Color.FromArgb(240, 180, 90);
-        else _hwStatus.ForeColor = Color.FromArgb(150, 153, 160);
+        _lhmStatus.ForeColor = _eng.LhmOk ? UiTheme.Good : UiTheme.Bad;
+        _lhmStatus.Text = _eng.LhmOk ? "LHM ● CPU/SoC/内存/占用" : "LHM ○ 已切系统计数器兜底";
+        if (_eng.HwStateText.StartsWith("HWiNFO ●")) _hwStatus.ForeColor = UiTheme.Good;
+        else if (_eng.HwStateText.StartsWith("HWiNFO 已运行")) _hwStatus.ForeColor = UiTheme.Warn;
+        else _hwStatus.ForeColor = UiTheme.TextDim;
         _hwStatus.Text = _eng.HwStateText;
         if (!_eng.HwStateText.StartsWith("HWiNFO ●")) _hwStatus.Text += " · 点击安装引导";
         else _hwStatus.Text += " · 数据已接通";
@@ -818,7 +920,7 @@ internal class MainForm : Form
             mb.Append(m.Name).Append(m.Ok ? " ● " : " ○ ").Append(m.StatusText).Append("  ");
         }
         _modStatus.Text = mb.ToString().TrimEnd();
-        _modStatus.ForeColor = Color.FromArgb(170, 176, 184);
+        _modStatus.ForeColor = UiTheme.TextDim;
     }
 
     private void OpenHwGuide()
@@ -1040,15 +1142,24 @@ internal class MainForm : Form
                     mods.Append("   {" + mv.Token + "} = " + val + (mv.Unit.Length > 0 ? " " + mv.Unit : "") + "\n");
                 }
             }
+            // 非 ASCII 过滤(1602 只支持 ASCII)
+            bool removed;
+            string filtered = FilterAsciiText("CPU 中文 06%", out removed);
+
             File.WriteAllText(Path.Combine(outDir, "selftest.txt"),
                 "line0=[" + l0 + "]\nline1=[" + l1 + "]\nfan=" + f._eng.FanRpm + " temp=" + f._eng.CpuRealC + "\n"
                 + "lhmOk=" + f._eng.LhmOk + " realCpu=" + f._eng.CpuPct + "% realRam=" + f._eng.RamPct
                 + "% realSoc=" + f._eng.SocC + "C hw=" + f._eng.HwCount + "\n"
                 + "bounds editor=" + f.GetEditorBounds() + " host=" + f.GetHostBounds()
                 + " vars=" + f.GetVarsBounds() + " status=" + f.GetStatusBounds() + "\n"
+                + "lcd px=" + f._lcd.PixelSize + " size=" + f._lcd.Width + "x" + f._lcd.Height
+                + " hostH=" + f._host.Height + "\n"
+                + "asciiFilter=[" + filtered + "] removed=" + removed + "\n"
                 + mods.ToString());
+            bool layoutOk = f._lcd.Width >= 700 && f._editor.Top >= f._host.Bottom;
+            bool filterOk = removed && filtered == "CPU  06%";
             bool ok = l0.StartsWith("CPU 37%") && l1.Contains("56") && l1.Contains("hello")
-                && f._eng.LhmOk;
+                && f._eng.LhmOk && layoutOk && filterOk;
             f._eng.Dispose();
             return ok ? 0 : 1;
         }

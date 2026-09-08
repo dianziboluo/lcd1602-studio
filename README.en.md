@@ -19,7 +19,10 @@ PC side LCD1602Studio.exe (C#/WinForms, zero installs, compiled with Windows bui
 ## Features
 
 - **LCD1602 simulator**: self-drawn 5x7 dot matrix (not a font render), blue/green/off backlight,
-  unlit pixels visible, marquee for long lines
+  unlit pixels visible, marquee for long lines; **scales up with the window** (up to 13 px per dot,
+  ~1300 px wide when maximized), background and glyph bitmaps are cached so **the 1 Hz refresh never flickers**
+- **ASCII-only input**: a real 1602 only supports ASCII — typing Chinese etc. is **filtered automatically**
+  with a warning (`℃` and `°` excepted, they map to a custom glyph / ROM)
 - **WYSIWYG sync**: a "Sync to screen" toggle finds the ESP32 serial port automatically and pushes
   the rendered two lines every second
 - **Dot-matrix glyph editor**: hand-draw 5x7 custom characters (8 CGRAM slots), thumbnail list,
