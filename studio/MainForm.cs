@@ -97,6 +97,7 @@ internal class MainForm : Form
             _eng.Dispose();
             _sync.Dispose();
             _modules.Dispose();
+            ModuleVars.Clear();
             CurrentRowInserter = null;
             if (_tray != null) { _tray.Visible = false; _tray.Dispose(); _tray = null; }
         };
@@ -622,7 +623,8 @@ internal class MainForm : Form
         }
         for (int slot = 0; slot < 8; slot++) groups[4].Add(VarItem.Glyph(slot));
 
-        // 扩展模块变量(DSH / DeepSeek ...)
+        // 扩展模块变量(DSH / DeepSeek ...): 同时登记到渲染器解析表
+        ModuleVars.Clear();
         int gi = 5;
         foreach (IModule m in _modules.Modules)
         {
@@ -633,6 +635,7 @@ internal class MainForm : Form
                 VarItem it = VarItem.Builtin(captured.Name, "{" + captured.Token + "}", captured.Unit,
                     eng => SafeModuleValue(captured));
                 groups[gi].Add(it);
+                ModuleVars[captured.Token] = delegate { return SafeModuleValue(captured); };
             }
             gi++;
         }
@@ -704,6 +707,9 @@ internal class MainForm : Form
         if (g.Count >= cap[groupIndex]) return;
         g.Add(VarItem.Hw(e));
     }
+
+    /// <summary>扩展模块变量解析表(token -> 取值), 供模板渲染使用</summary>
+    internal static readonly Dictionary<string, Func<string>> ModuleVars = new Dictionary<string, Func<string>>();
 
     /// <summary>模块变量取值(异常隔离: 任何异常显示 --, 不影响渲染)</summary>
     private static string SafeModuleValue(ModuleVar v)
@@ -869,6 +875,17 @@ internal class MainForm : Form
                 {
                     string v = eng.FindHw(name);
                     return v ?? "--";
+                }
+                // 扩展模块变量(DSH / DeepSeek / 未来模块)
+                Func<string> fn;
+                if (ModuleVars.TryGetValue(name, out fn))
+                {
+                    try
+                    {
+                        string mv = fn();
+                        return string.IsNullOrEmpty(mv) ? "--" : mv;
+                    }
+                    catch { return "--"; }
                 }
                 return "-?-";
         }
@@ -1146,6 +1163,10 @@ internal class MainForm : Form
             bool removed;
             string filtered = FilterAsciiText("CPU 中文 06%", out removed);
 
+            // 模块变量必须能被模板渲染(回归: 曾渲染成 -?-)
+            string modRender = RenderLine("{ds.bal} {dsh.state}", f._eng);
+            bool modRenderOk = modRender.IndexOf("-?-") < 0 && modRender.Trim().Length > 0;
+
             File.WriteAllText(Path.Combine(outDir, "selftest.txt"),
                 "line0=[" + l0 + "]\nline1=[" + l1 + "]\nfan=" + f._eng.FanRpm + " temp=" + f._eng.CpuRealC + "\n"
                 + "lhmOk=" + f._eng.LhmOk + " realCpu=" + f._eng.CpuPct + "% realRam=" + f._eng.RamPct
@@ -1155,11 +1176,12 @@ internal class MainForm : Form
                 + "lcd px=" + f._lcd.PixelSize + " size=" + f._lcd.Width + "x" + f._lcd.Height
                 + " hostH=" + f._host.Height + "\n"
                 + "asciiFilter=[" + filtered + "] removed=" + removed + "\n"
+                + "modRender=[" + modRender + "] ok=" + modRenderOk + "\n"
                 + mods.ToString());
             bool layoutOk = f._lcd.Width >= 700 && f._editor.Top >= f._host.Bottom;
             bool filterOk = removed && filtered == "CPU  06%";
             bool ok = l0.StartsWith("CPU 37%") && l1.Contains("56") && l1.Contains("hello")
-                && f._eng.LhmOk && layoutOk && filterOk;
+                && f._eng.LhmOk && layoutOk && filterOk && modRenderOk;
             f._eng.Dispose();
             return ok ? 0 : 1;
         }
