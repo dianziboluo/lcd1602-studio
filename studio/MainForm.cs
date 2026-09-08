@@ -31,12 +31,13 @@ internal class MainForm : Form
 {
     private DataEngine _eng = new DataEngine();
     private SerialSync _sync = new SerialSync();
+    private ModuleHost _modules = new ModuleHost();
     private Lcd1602Control _lcd;
     private Panel _host, _editor, _varHost, _statusBar;
     private TextBox _tb0, _tb1, _search;
     private CheckBox _chk0, _chk1;
     private ListBox _vars;
-    private Label _lhmStatus, _hwStatus, _footer;
+    private Label _lhmStatus, _hwStatus, _footer, _modStatus;
     private Button _btnBack, _tabAll, _tabBuiltin, _tabHw, _btnCollapse, _btnSave, _btnSync, _btnPreset, _btnGlyph;
     private Panel _tabsHost;
     private Label _titleLabel;
@@ -47,9 +48,9 @@ internal class MainForm : Form
     private int _saveFlashUntil;
     private readonly bool _selftest;
     private readonly List<VarItem> _varItems = new List<VarItem>();
-    private readonly bool[] _grpCollapsed = new bool[5] { false, true, true, true, false };  // 常用/字形展开, HWiNFO 组折叠
+    private readonly bool[] _grpCollapsed = new bool[7] { false, true, true, true, false, false, false };
     private bool _varsCollapsed;
-    private static readonly string[] GrpTitles = { "常用", "HWiNFO · 温度", "HWiNFO · 风扇", "HWiNFO · 占用", "字形 · 拖到屏上" };
+    private static readonly string[] GrpTitles = { "常用", "HWiNFO · 温度", "HWiNFO · 风扇", "HWiNFO · 占用", "字形 · 拖到屏上", "DSH", "DeepSeek" };
 
     private const int RowLabelW = 48, RowBoxX = 66, RowChkW = 64, RowBtnW = 92, RowH = 52;
 
@@ -66,6 +67,11 @@ internal class MainForm : Form
         BuildUI();
         LoadSettings();
         _eng.Open();
+        // 扩展模块: PC 端一切功能以模块接入, 显示器只负责显示
+        _modules.Add(new DshModule());
+        _modules.Add(new DsModule());
+        _modules.WriteSampleConfigIfMissing();
+        _modules.Start();
         UpdateStatus();
         RefreshVarList();
         ApplyVarCollapse();
@@ -86,6 +92,7 @@ internal class MainForm : Form
         {
             _eng.Dispose();
             _sync.Dispose();
+            _modules.Dispose();
             CurrentRowInserter = null;
             if (_tray != null) { _tray.Visible = false; _tray.Dispose(); _tray = null; }
         };
@@ -191,6 +198,10 @@ internal class MainForm : Form
         _hwStatus.Cursor = Cursors.Hand;
         _hwStatus.Click += (s, e) => OpenHwGuide();
         _statusBar.Controls.Add(_hwStatus);
+
+        _modStatus = NewStatusLabel();
+        _modStatus.Location = new Point(760, 9);
+        _statusBar.Controls.Add(_modStatus);
 
         // ---- 数据台(子面板 Dock: 列表先加, 标题最后加) ----
         _varHost = new Panel();
@@ -509,7 +520,7 @@ internal class MainForm : Form
     private void RefreshVarList()
     {
         var groups = new List<List<VarItem>>();
-        for (int i = 0; i < 5; i++) groups.Add(new List<VarItem>());
+        for (int i = 0; i < 7; i++) groups.Add(new List<VarItem>());
 
         string fanName;
         if (_eng.HwStateText.StartsWith("HWiNFO ●"))
@@ -532,6 +543,21 @@ internal class MainForm : Form
         }
         for (int slot = 0; slot < 8; slot++) groups[4].Add(VarItem.Glyph(slot));
 
+        // 扩展模块变量(DSH / DeepSeek ...)
+        int gi = 5;
+        foreach (IModule m in _modules.Modules)
+        {
+            if (gi >= groups.Count) break;
+            foreach (ModuleVar mv in m.Variables())
+            {
+                ModuleVar captured = mv;
+                VarItem it = VarItem.Builtin(captured.Name, "{" + captured.Token + "}", captured.Unit,
+                    eng => SafeModuleValue(captured));
+                groups[gi].Add(it);
+            }
+            gi++;
+        }
+
         // 命令面板用扁平源
         _varItems.Clear();
         foreach (List<VarItem> g in groups) _varItems.AddRange(g);
@@ -541,10 +567,10 @@ internal class MainForm : Form
 
         _vars.BeginUpdate();
         _vars.Items.Clear();
-        for (int g = 0; g < 5; g++)
+        for (int g = 0; g < groups.Count; g++)
         {
-            if (_tabMode == 1 && g != 0 && g != 4) continue;      // 内置: 常用+字形
-            if (_tabMode == 2 && (g == 0 || g == 4)) continue;    // HWiNFO: 温/扇/占
+            if (_tabMode == 1 && (g == 1 || g == 2 || g == 3)) continue;   // 内置: 除 HWiNFO 组
+            if (_tabMode == 2 && g != 1 && g != 2 && g != 3) continue;      // HWiNFO: 温/扇/占
             List<VarItem> hits = new List<VarItem>();
             bool[] added = new bool[groups[g].Count];
             for (int i = 0; i < groups[g].Count; i++)
@@ -580,6 +606,17 @@ internal class MainForm : Form
     {
         if (g.Count >= cap[groupIndex]) return;
         g.Add(VarItem.Hw(e));
+    }
+
+    /// <summary>模块变量取值(异常隔离: 任何异常显示 --, 不影响渲染)</summary>
+    private static string SafeModuleValue(ModuleVar v)
+    {
+        try
+        {
+            string s = v.Value != null ? v.Value() : null;
+            return string.IsNullOrEmpty(s) ? "--" : s;
+        }
+        catch { return "--"; }
     }
 
     private void DrawVarRow(object sender, DrawItemEventArgs e)
@@ -773,6 +810,15 @@ internal class MainForm : Form
         _hwStatus.Text = _eng.HwStateText;
         if (!_eng.HwStateText.StartsWith("HWiNFO ●")) _hwStatus.Text += " · 点击安装引导";
         else _hwStatus.Text += " · 数据已接通";
+
+        // 模块状态: DSH ● / DeepSeek ●
+        StringBuilder mb = new StringBuilder("模块: ");
+        foreach (IModule m in _modules.Modules)
+        {
+            mb.Append(m.Name).Append(m.Ok ? " ● " : " ○ ").Append(m.StatusText).Append("  ");
+        }
+        _modStatus.Text = mb.ToString().TrimEnd();
+        _modStatus.ForeColor = Color.FromArgb(170, 176, 184);
     }
 
     private void OpenHwGuide()
@@ -824,7 +870,7 @@ internal class MainForm : Form
                 else if (k == "varsCollapsed") _varsCollapsed = v == "1";
                 else if (k == "groups")
                 {
-                    for (int i = 0; i < v.Length && i < 5; i++)
+                    for (int i = 0; i < v.Length && i < _grpCollapsed.Length; i++)
                         if (v[i] == '1') _grpCollapsed[i] = true;
                 }
                 else if (k.StartsWith("glyph"))
@@ -850,7 +896,7 @@ internal class MainForm : Form
             sb.AppendLine("backlight=" + (int)_lcd.Backlight);
             sb.AppendLine("varsCollapsed=" + (_varsCollapsed ? "1" : "0"));
             StringBuilder gb = new StringBuilder();
-            for (int i = 0; i < 5; i++) gb.Append(_grpCollapsed[i] ? "1" : "0");
+            for (int i = 0; i < _grpCollapsed.Length; i++) gb.Append(_grpCollapsed[i] ? "1" : "0");
             sb.AppendLine("groups=" + gb.ToString());
             for (int i = 0; i < 8; i++) sb.AppendLine("glyph" + i + "=" + CustomGlyphs.ToHex(i));
             File.WriteAllText(SettingsFile, sb.ToString());
@@ -982,12 +1028,25 @@ internal class MainForm : Form
 
             string l0 = f._lcd.RowText(0), l1 = f._lcd.RowText(1);
             f._eng.Tick();
+            System.Threading.Thread.Sleep(1500);   // 等扩展模块完成首轮轮询
+            StringBuilder mods = new StringBuilder();
+            foreach (IModule m in f._modules.Modules)
+            {
+                mods.Append("mod " + m.Id + " ok=" + m.Ok + " status=" + m.StatusText + "\n");
+                foreach (ModuleVar mv in m.Variables())
+                {
+                    string val = "--";
+                    try { val = mv.Value(); } catch { }
+                    mods.Append("   {" + mv.Token + "} = " + val + (mv.Unit.Length > 0 ? " " + mv.Unit : "") + "\n");
+                }
+            }
             File.WriteAllText(Path.Combine(outDir, "selftest.txt"),
                 "line0=[" + l0 + "]\nline1=[" + l1 + "]\nfan=" + f._eng.FanRpm + " temp=" + f._eng.CpuRealC + "\n"
                 + "lhmOk=" + f._eng.LhmOk + " realCpu=" + f._eng.CpuPct + "% realRam=" + f._eng.RamPct
                 + "% realSoc=" + f._eng.SocC + "C hw=" + f._eng.HwCount + "\n"
                 + "bounds editor=" + f.GetEditorBounds() + " host=" + f.GetHostBounds()
-                + " vars=" + f.GetVarsBounds() + " status=" + f.GetStatusBounds() + "\n");
+                + " vars=" + f.GetVarsBounds() + " status=" + f.GetStatusBounds() + "\n"
+                + mods.ToString());
             bool ok = l0.StartsWith("CPU 37%") && l1.Contains("56") && l1.Contains("hello")
                 && f._eng.LhmOk;
             f._eng.Dispose();

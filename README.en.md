@@ -93,6 +93,24 @@ adapter → yellow-green LCD1602A, displaying the user's custom template
 2. Tools menu: board `esp32 → AirM2M CORE ESP32C3`; **USB CDC On Boot = Enabled**
 3. Upload (if the auto-download circuit fails: hold the onboard BOOT button and click Upload)
 
+## Extension modules (PC side, zero firmware changes)
+
+The display only displays; every feature lives in a PC-side module. Adding a data source =
+write a module + register one line — **the ESP32 firmware never changes**.
+See [MODULES.en.md](MODULES.en.md) / [MODULES.md](MODULES.md).
+
+| Module | Variables | Notes |
+|---|---|---|
+| **DSH** | `{dsh.state}` `{dsh.min}` | busy / idle / not running + minutes since last activity (session-file activity + API connection) |
+| **DeepSeek** | `{ds.bal}` `{ds.bal.grant}` `{ds.bal.top}` `{ds.bal.age}` | account balance (DSH cache first, auto-refresh via official `/user/balance`) |
+| | `{ds.peak.now}` `{ds.rate}` `{ds.peak.in}` `{ds.peak.left}` | off-peak window: current rate / time until off-peak / time left (computed locally) |
+
+Config: `%APPDATA%\LCD1602Studio\modules.ini` (auto-created with comments).
+Example template: `CPU {cpu}% DS {ds.bal}` / `{dsh.state} {ds.peak.in}`
+
+> Privacy: the API key is read locally only (from `~/.dsh/.credentials.yaml` or typed in);
+> never logged, never uploaded, never committed.
+
 ## Serial protocol (115200)
 
 ```
@@ -107,7 +125,7 @@ Special bytes: 0x01..0x08 → CGRAM slots 0..7; 0xDF = ° (ROM degree sign)
 
 ```
 lcd1602-studio/
-├── studio/      Desktop GUI (LCD1602Studio): sources + build.bat (auto-downloads LHM)
+├── studio/      Desktop GUI (LCD1602Studio): sources + build.bat (auto-downloads LHM) + Modules/
 ├── firmware/    ESP32-C3 firmware (lcd_monitor.ino)
 ├── monitor/     Legacy console host (monitor.cs, protocol-compatible, fixed layout)
 ├── docs/        Screenshots

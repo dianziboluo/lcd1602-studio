@@ -81,6 +81,22 @@ Windows 10/11
 2. 工具菜单:开发板 `esp32 → AirM2M CORE ESP32C3`;**USB CDC On Boot = Enabled**
 3. 上传(此板自动下载电路不可靠时:按住板载 BOOT 键再点上传)
 
+## 扩展模块(PC 端,固件零改动)
+
+显示器只负责显示,一切功能都在 PC 端的模块里 —— 加一个数据源 = 写一个模块 + 注册一行,
+**ESP32 固件完全不用动**。详见 [MODULES.md](MODULES.md) / [MODULES.en.md](MODULES.en.md)。
+
+| 模块 | 变量 | 说明 |
+|---|---|---|
+| **DSH** | `{dsh.state}` `{dsh.min}` | DSH 运行/空闲/未启动 + 距上次活动(会话文件活动 + API 连接双信号判定) |
+| **DeepSeek** | `{ds.bal}` `{ds.bal.grant}` `{ds.bal.top}` `{ds.bal.age}` | 账户余额(DSH 缓存优先,过期自动调用官方 `/user/balance`) |
+| | `{ds.peak.now}` `{ds.rate}` `{ds.peak.in}` `{ds.peak.left}` | 平价(空闲)时段:当前档位 / 距空闲开始 / 空闲剩余(纯本地计算) |
+
+配置:`%APPDATA%\LCD1602Studio\modules.ini`(首次运行自动生成带注释示例)
+示例模板:`CPU {cpu}% DS {ds.bal}元` / `{dsh.state} 闲 {ds.peak.in}`
+
+> 隐私:API Key 仅本地读取(`~/.dsh/.credentials.yaml` 或手填),不写日志、不上传、不进仓库。
+
 ## 数据协议 (USB 串口 115200)
 
 ```
@@ -95,13 +111,14 @@ CG,<槽0-7>,<8行字节,逗号分隔>\n  # 自定义字形(CGRAM)
 
 ```
 lcd1602-studio/
-├── studio/      桌面 GUI(LCD1602Studio): 源码 + build.bat(自动下载 LHM)
+├── studio/      桌面 GUI(LCD1602Studio): 源码 + build.bat(自动下载 LHM)+ Modules/ 扩展模块
 ├── firmware/    ESP32-C3 固件(lcd_monitor.ino)
 ├── monitor/     旧版命令行主机(monitor.cs, 协议兼容, 可继续用于固定排版)
 ├── docs/        截图
 ├── LICENSE              MIT
 ├── README.en.md          英文文档
 ├── HARDWARE.md / HARDWARE.en.md  实测硬件清单(中/英)
+├── MODULES.md / MODULES.en.md    扩展模块说明(中/英)
 └── THIRD_PARTY_LICENSES.md
 ```
 
