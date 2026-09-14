@@ -37,7 +37,22 @@ or referenced as external tools. Their notices are listed for compliance.
 - Not bundled. Mentioned in the guide UI as an optional prerequisite for AMD CPU
   temperature access with LibreHardwareMonitor.
 
+## 合宙 CORE-ESP32-C3 PinOut 脚位图 (docs/pinout_board.png)
+
+- Source: **合宙 (AirM2M) LuatOS 官方文档** — https://wiki.luatos.com
+  ("合宙ESP32-C3开发板PinOut示意图 V4.22110201")
+- Status: **vendor documentation image, copyright 合宙 (AirM2M)**. It is **not** open-source
+  licensed material.
+- Usage here: `docs/pinout_board.png` is a **crop** of that diagram (board photo + pin numbers
+  + silk labels), used **solely as the base layer of the wiring illustration**
+  `docs/wiring_board.svg` / `docs/wiring_board.png`, to make the pinout unmistakable for users.
+- Attribution is printed inside the illustration itself and in README / HARDWARE docs.
+- If you redistribute this repository commercially, replace this image with your own drawing —
+  the pure-vector alternative `docs/wiring.svg` (self-drawn, no third-party content) is provided
+  for exactly that purpose.
+
 ## Hardware documentation
 
 Datasheets/schematics for the dev board, LCD and adapter are **not** included in this
-repository; refer to your vendor's resources.
+repository; refer to your vendor's resources. The only vendor image included is the
+PinOut diagram crop described above.

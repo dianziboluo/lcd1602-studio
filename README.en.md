@@ -113,9 +113,13 @@ adapter → yellow-green LCD1602A, displaying the user's custom template
 > VDD from 5V, the signal lines must go through a 74HCT245/TXS0108E level shifter.
 > Details: [HARDWARE.en.md](HARDWARE.en.md) section 6.
 
-**Wiring diagram (PNG — click to zoom; vector version [docs/wiring.svg](docs/wiring.svg) prints cleanly):**
+**Wiring diagram (base layer = the official 合宙 PinOut diagram; the 8 boxed pins are the 8 wires you need):**
 
-![LCD1602 direct-to-ESP32-C3 wiring diagram](docs/wiring.png)
+![LCD1602 direct-to-ESP32-C3 wiring diagram (official pinout base)](docs/wiring_board.png)
+
+> A pure-vector alternative is also included — [docs/wiring.svg](docs/wiring.svg) (no third-party
+> imagery, safe to redistribute/print). The official pinout diagram is copyright 合宙;
+> see [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md).
 
 ## Firmware flashing (Arduino IDE)
 
