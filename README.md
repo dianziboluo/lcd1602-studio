@@ -99,6 +99,10 @@ Windows 10/11
 > 若把 LCD 的 VDD 接 5V,信号线必须加 74HCT245/TXS0108E 电平转换。
 > 详见 [HARDWARE.md](HARDWARE.md) 第 6 节。
 
+**接线图(PNG,点开可放大;矢量版 [docs/wiring.svg](docs/wiring.svg) 可直接打印):**
+
+![LCD1602 直连 ESP32-C3 接线图](docs/wiring.png)
+
 ## 固件烧录(Arduino IDE)
 
 1. `firmware/lcd_monitor.ino`;库:`LiquidCrystal_I2C`(YwRobot/PCF8574 版,仅方式 A 需要;

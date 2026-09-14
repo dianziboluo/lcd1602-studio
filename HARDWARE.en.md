@@ -117,6 +117,11 @@ Pin choice: avoid **GPIO2/8/9** (strapping pins + UART0) and **GPIO18/19** (USB)
 GPIO4/5 are exactly the pins the I2C wiring used, so you can reuse the same wires.
 To change pins, edit `PIN_RS/PIN_EN/PIN_D4~PIN_D7` at the top of `firmware/LcdParallel.h`.
 
+**Wiring diagram** (vector [docs/wiring.svg](docs/wiring.svg) prints cleanly,
+PNG [docs/wiring.png](docs/wiring.png)):
+
+![LCD1602 direct-to-ESP32-C3 wiring diagram](docs/wiring.png)
+
 Firmware switch — one line in `lcd_monitor.ino`:
 
 ```cpp

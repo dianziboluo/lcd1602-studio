@@ -115,6 +115,10 @@ ESP32-C3                        PCF8574 转接板        LCD1602A
 GPIO4/5 正好是原来 I2C 用的脚,可以直接沿用。脚位想换就改
 `firmware/LcdParallel.h` 顶部的 `PIN_RS/PIN_EN/PIN_D4~PIN_D7`。
 
+**接线图**(矢量版 [docs/wiring.svg](docs/wiring.svg) 可打印,PNG 版 [docs/wiring.png](docs/wiring.png)):
+
+![LCD1602 直连 ESP32-C3 接线图](docs/wiring.png)
+
 固件切换:把 `lcd_monitor.ino` 里这一行改成并行即可 ——
 
 ```cpp

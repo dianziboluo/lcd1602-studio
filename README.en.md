@@ -113,6 +113,10 @@ adapter → yellow-green LCD1602A, displaying the user's custom template
 > VDD from 5V, the signal lines must go through a 74HCT245/TXS0108E level shifter.
 > Details: [HARDWARE.en.md](HARDWARE.en.md) section 6.
 
+**Wiring diagram (PNG — click to zoom; vector version [docs/wiring.svg](docs/wiring.svg) prints cleanly):**
+
+![LCD1602 direct-to-ESP32-C3 wiring diagram](docs/wiring.png)
+
 ## Firmware flashing (Arduino IDE)
 
 1. `firmware/lcd_monitor.ino`; library: `LiquidCrystal_I2C` (YwRobot/PCF8574 version —

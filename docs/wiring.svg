@@ -1,0 +1,278 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="1400" viewBox="0 0 1180 1400">
+<rect x="0" y="0" width="1180" height="1400" rx="0" fill="#FFFFFF" stroke="none" stroke-width="1" opacity="1"/>
+<text x="52" y="48" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="24" fill="#0F172A" text-anchor="start" font-weight="bold">LCD1602 直连 ESP32-C3(并行 4 位)接线图</text>
+<text x="52" y="76" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="14" fill="#475569" text-anchor="start" font-weight="normal">无 I2C 转接板 · 6 根信号线 + 电源 · 屏是 5V 款也可整机 3.3V</text>
+<text x="1128" y="48" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="15" fill="#0F172A" text-anchor="end" font-weight="bold">合宙 CORE-ESP32-C3</text>
+<text x="1128" y="70" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="12.5" fill="#475569" text-anchor="end" font-weight="normal">固件: LCD_DRIVER_PARALLEL</text>
+<line x1="52" y1="92" x2="1128" y2="92" stroke="#E2E8F0" stroke-width="1.5" stroke-linecap="round"/>
+<rect x="52" y="108" width="1076" height="860" rx="14" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1.4" opacity="1"/>
+<rect x="74" y="178" width="226" height="752" rx="16" fill="#232733" stroke="#3A4152" stroke-width="1.5" opacity="1"/>
+<text x="187.0" y="212" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="15.5" fill="#E6E9F0" text-anchor="middle" font-weight="bold">合宙 CORE</text>
+<text x="187.0" y="233" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="15.5" fill="#E6E9F0" text-anchor="middle" font-weight="bold">ESP32-C3</text>
+<text x="187.0" y="254" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="10.5" fill="#98A0B3" text-anchor="middle" font-weight="normal">只画 17~32 这一排</text>
+<text x="187.0" y="908" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="10.5" fill="#98A0B3" text-anchor="middle" font-weight="normal">另一侧 = 1~16 脚</text>
+<rect x="295" y="243" width="11" height="14" rx="2.5" fill="#5B6373" stroke="none" stroke-width="1" opacity="1"/>
+<text x="313" y="254.5" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="11.5" fill="#475569" text-anchor="start" font-weight="normal">17</text>
+<text x="284" y="249" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="13" fill="#98A0B3" text-anchor="end" font-weight="normal">GND</text>
+<text x="284" y="263" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="9.5" fill="#6B7385" text-anchor="end" font-weight="normal">接地</text>
+<rect x="295" y="285" width="11" height="14" rx="2.5" fill="#5B6373" stroke="none" stroke-width="1" opacity="1"/>
+<text x="313" y="296.5" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="11.5" fill="#475569" text-anchor="start" font-weight="normal">18</text>
+<text x="284" y="291" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="13" fill="#98A0B3" text-anchor="end" font-weight="normal">3.3V</text>
+<text x="284" y="305" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="9.5" fill="#6B7385" text-anchor="end" font-weight="normal">3.3V</text>
+<rect x="295" y="327" width="11" height="14" rx="2.5" fill="#5B6373" stroke="none" stroke-width="1" opacity="1"/>
+<text x="313" y="338.5" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="11.5" fill="#475569" text-anchor="start" font-weight="normal">19</text>
+<text x="284" y="333" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="13" fill="#98A0B3" text-anchor="end" font-weight="normal">IO02</text>
+<text x="284" y="347" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="9.5" fill="#6B7385" text-anchor="end" font-weight="normal">GPIO2</text>
+<rect x="295" y="369" width="11" height="14" rx="2.5" fill="#DB2777" stroke="none" stroke-width="1" opacity="1"/>
+<text x="313" y="380.5" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="11.5" fill="#0F172A" text-anchor="start" font-weight="bold">20</text>
+<text x="284" y="375" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="13" fill="#E6E9F0" text-anchor="end" font-weight="bold">IO03</text>
+<text x="284" y="389" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="9.5" fill="#DB2777" text-anchor="end" font-weight="normal">GPIO3  → D7</text>
+<line x1="306" y1="376" x2="336" y2="376" stroke="#DB2777" stroke-width="2.4" stroke-linecap="round"/>
+<rect x="295" y="411" width="11" height="14" rx="2.5" fill="#D97706" stroke="none" stroke-width="1" opacity="1"/>
+<text x="313" y="422.5" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="11.5" fill="#0F172A" text-anchor="start" font-weight="bold">21</text>
+<text x="284" y="417" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="13" fill="#E6E9F0" text-anchor="end" font-weight="bold">IO10</text>
+<text x="284" y="431" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="9.5" fill="#D97706" text-anchor="end" font-weight="normal">GPIO10 → D6</text>
+<line x1="306" y1="418" x2="336" y2="418" stroke="#D97706" stroke-width="2.4" stroke-linecap="round"/>
+<rect x="295" y="453" width="11" height="14" rx="2.5" fill="#0891B2" stroke="none" stroke-width="1" opacity="1"/>
+<text x="313" y="464.5" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="11.5" fill="#0F172A" text-anchor="start" font-weight="bold">22</text>
+<text x="284" y="459" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="13" fill="#E6E9F0" text-anchor="end" font-weight="bold">IO06</text>
+<text x="284" y="473" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="9.5" fill="#0891B2" text-anchor="end" font-weight="normal">GPIO6  → D5</text>
+<line x1="306" y1="460" x2="336" y2="460" stroke="#0891B2" stroke-width="2.4" stroke-linecap="round"/>
+<rect x="295" y="495" width="11" height="14" rx="2.5" fill="#059669" stroke="none" stroke-width="1" opacity="1"/>
+<text x="313" y="506.5" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="11.5" fill="#0F172A" text-anchor="start" font-weight="bold">23</text>
+<text x="284" y="501" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="13" fill="#E6E9F0" text-anchor="end" font-weight="bold">IO07</text>
+<text x="284" y="515" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="9.5" fill="#059669" text-anchor="end" font-weight="normal">GPIO7  → D4</text>
+<line x1="306" y1="502" x2="336" y2="502" stroke="#059669" stroke-width="2.4" stroke-linecap="round"/>
+<rect x="295" y="537" width="11" height="14" rx="2.5" fill="#5B6373" stroke="none" stroke-width="1" opacity="1"/>
+<text x="313" y="548.5" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="11.5" fill="#475569" text-anchor="start" font-weight="normal">24</text>
+<text x="284" y="543" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="13" fill="#98A0B3" text-anchor="end" font-weight="normal">PB_11</text>
+<text x="284" y="557" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="9.5" fill="#6B7385" text-anchor="end" font-weight="normal">GPIO11 ✗ 勿用</text>
+<rect x="295" y="579" width="11" height="14" rx="2.5" fill="#111827" stroke="none" stroke-width="1" opacity="1"/>
+<text x="313" y="590.5" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="11.5" fill="#0F172A" text-anchor="start" font-weight="bold">25</text>
+<text x="284" y="585" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="13" fill="#E6E9F0" text-anchor="end" font-weight="bold">GND</text>
+<text x="284" y="599" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="9.5" fill="#111827" text-anchor="end" font-weight="normal">接地  → VSS / K</text>
+<line x1="306" y1="586" x2="336" y2="586" stroke="#111827" stroke-width="2.4" stroke-linecap="round"/>
+<rect x="295" y="621" width="11" height="14" rx="2.5" fill="#DC2626" stroke="none" stroke-width="1" opacity="1"/>
+<text x="313" y="632.5" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="11.5" fill="#0F172A" text-anchor="start" font-weight="bold">26</text>
+<text x="284" y="627" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="13" fill="#E6E9F0" text-anchor="end" font-weight="bold">3.3V</text>
+<text x="284" y="641" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="9.5" fill="#DC2626" text-anchor="end" font-weight="normal">3.3V  → VDD / A</text>
+<line x1="306" y1="628" x2="336" y2="628" stroke="#DC2626" stroke-width="2.4" stroke-linecap="round"/>
+<rect x="295" y="663" width="11" height="14" rx="2.5" fill="#7C3AED" stroke="none" stroke-width="1" opacity="1"/>
+<text x="313" y="674.5" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="11.5" fill="#0F172A" text-anchor="start" font-weight="bold">27</text>
+<text x="284" y="669" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="13" fill="#E6E9F0" text-anchor="end" font-weight="bold">IO05</text>
+<text x="284" y="683" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="9.5" fill="#7C3AED" text-anchor="end" font-weight="normal">GPIO5  → RS(I2C_SCL)</text>
+<line x1="306" y1="670" x2="336" y2="670" stroke="#7C3AED" stroke-width="2.4" stroke-linecap="round"/>
+<rect x="295" y="705" width="11" height="14" rx="2.5" fill="#2563EB" stroke="none" stroke-width="1" opacity="1"/>
+<text x="313" y="716.5" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="11.5" fill="#0F172A" text-anchor="start" font-weight="bold">28</text>
+<text x="284" y="711" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="13" fill="#E6E9F0" text-anchor="end" font-weight="bold">IO04</text>
+<text x="284" y="725" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="9.5" fill="#2563EB" text-anchor="end" font-weight="normal">GPIO4  → E(I2C_SDA)</text>
+<line x1="306" y1="712" x2="336" y2="712" stroke="#2563EB" stroke-width="2.4" stroke-linecap="round"/>
+<rect x="295" y="747" width="11" height="14" rx="2.5" fill="#5B6373" stroke="none" stroke-width="1" opacity="1"/>
+<text x="313" y="758.5" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="11.5" fill="#475569" text-anchor="start" font-weight="normal">29</text>
+<text x="284" y="753" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="13" fill="#98A0B3" text-anchor="end" font-weight="normal">IO08</text>
+<text x="284" y="767" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="9.5" fill="#6B7385" text-anchor="end" font-weight="normal">GPIO8</text>
+<rect x="295" y="789" width="11" height="14" rx="2.5" fill="#5B6373" stroke="none" stroke-width="1" opacity="1"/>
+<text x="313" y="800.5" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="11.5" fill="#475569" text-anchor="start" font-weight="normal">30</text>
+<text x="284" y="795" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="13" fill="#98A0B3" text-anchor="end" font-weight="normal">BOOT</text>
+<text x="284" y="809" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="9.5" fill="#6B7385" text-anchor="end" font-weight="normal">GPIO9</text>
+<rect x="295" y="831" width="11" height="14" rx="2.5" fill="#5B6373" stroke="none" stroke-width="1" opacity="1"/>
+<text x="313" y="842.5" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="11.5" fill="#475569" text-anchor="start" font-weight="normal">31</text>
+<text x="284" y="837" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="13" fill="#98A0B3" text-anchor="end" font-weight="normal">5V</text>
+<text x="284" y="851" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="9.5" fill="#6B7385" text-anchor="end" font-weight="normal">5V</text>
+<rect x="295" y="873" width="11" height="14" rx="2.5" fill="#5B6373" stroke="none" stroke-width="1" opacity="1"/>
+<text x="313" y="884.5" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="11.5" fill="#475569" text-anchor="start" font-weight="normal">32</text>
+<text x="284" y="879" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="13" fill="#98A0B3" text-anchor="end" font-weight="normal">GND</text>
+<text x="284" y="893" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="9.5" fill="#6B7385" text-anchor="end" font-weight="normal">接地</text>
+<rect x="860" y="178" width="260" height="752" rx="14" fill="#1F6B34" stroke="#14532D" stroke-width="1.5" opacity="1"/>
+<text x="882" y="210" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="15.5" fill="#EAF3E4" text-anchor="start" font-weight="bold">LCD1602A</text>
+<text x="882" y="229" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="10.5" fill="#A7C7A0" text-anchor="start" font-weight="normal">16 列 × 2 行 · HD44780</text>
+<rect x="962" y="250" width="138" height="84" rx="6" fill="#C9DC4A" stroke="#0E3A1C" stroke-width="2" opacity="1"/>
+<rect x="968.0" y="258" width="6.0" height="24" rx="1.2" fill="#22331B" stroke="none" stroke-width="1" opacity="1"/>
+<rect x="976.2" y="258" width="6.0" height="24" rx="1.2" fill="#22331B" stroke="none" stroke-width="1" opacity="1"/>
+<rect x="984.4" y="258" width="6.0" height="24" rx="1.2" fill="#22331B" stroke="none" stroke-width="1" opacity="1"/>
+<rect x="992.6" y="258" width="6.0" height="24" rx="1.2" fill="#22331B" stroke="none" stroke-width="1" opacity="1"/>
+<rect x="1000.8" y="258" width="6.0" height="24" rx="1.2" fill="#22331B" stroke="none" stroke-width="1" opacity="1"/>
+<rect x="1009.0" y="258" width="6.0" height="24" rx="1.2" fill="#22331B" stroke="none" stroke-width="1" opacity="1"/>
+<rect x="1017.2" y="258" width="6.0" height="24" rx="1.2" fill="#22331B" stroke="none" stroke-width="1" opacity="1"/>
+<rect x="1025.4" y="258" width="6.0" height="24" rx="1.2" fill="#22331B" stroke="none" stroke-width="1" opacity="1"/>
+<rect x="1033.6" y="258" width="6.0" height="24" rx="1.2" fill="#22331B" stroke="none" stroke-width="1" opacity="1"/>
+<rect x="1041.8" y="258" width="6.0" height="24" rx="1.2" fill="#22331B" stroke="none" stroke-width="1" opacity="1"/>
+<rect x="1050.0" y="258" width="6.0" height="24" rx="1.2" fill="#22331B" stroke="none" stroke-width="1" opacity="1"/>
+<rect x="1058.2" y="258" width="6.0" height="24" rx="1.2" fill="#22331B" stroke="none" stroke-width="1" opacity="1"/>
+<rect x="1066.4" y="258" width="6.0" height="24" rx="1.2" fill="#22331B" stroke="none" stroke-width="1" opacity="1"/>
+<rect x="1074.6" y="258" width="6.0" height="24" rx="1.2" fill="#22331B" stroke="none" stroke-width="1" opacity="1"/>
+<rect x="1082.8" y="258" width="6.0" height="24" rx="1.2" fill="#22331B" stroke="none" stroke-width="1" opacity="1"/>
+<rect x="1091.0" y="258" width="6.0" height="24" rx="1.2" fill="#22331B" stroke="none" stroke-width="1" opacity="1"/>
+<rect x="968.0" y="292" width="6.0" height="24" rx="1.2" fill="#22331B" stroke="none" stroke-width="1" opacity="1"/>
+<rect x="976.2" y="292" width="6.0" height="24" rx="1.2" fill="#22331B" stroke="none" stroke-width="1" opacity="1"/>
+<rect x="984.4" y="292" width="6.0" height="24" rx="1.2" fill="#22331B" stroke="none" stroke-width="1" opacity="1"/>
+<rect x="992.6" y="292" width="6.0" height="24" rx="1.2" fill="#22331B" stroke="none" stroke-width="1" opacity="1"/>
+<rect x="1000.8" y="292" width="6.0" height="24" rx="1.2" fill="#22331B" stroke="none" stroke-width="1" opacity="1"/>
+<rect x="1009.0" y="292" width="6.0" height="24" rx="1.2" fill="#22331B" stroke="none" stroke-width="1" opacity="1"/>
+<rect x="1017.2" y="292" width="6.0" height="24" rx="1.2" fill="#22331B" stroke="none" stroke-width="1" opacity="1"/>
+<rect x="1025.4" y="292" width="6.0" height="24" rx="1.2" fill="#22331B" stroke="none" stroke-width="1" opacity="1"/>
+<rect x="1033.6" y="292" width="6.0" height="24" rx="1.2" fill="#22331B" stroke="none" stroke-width="1" opacity="1"/>
+<rect x="1041.8" y="292" width="6.0" height="24" rx="1.2" fill="#22331B" stroke="none" stroke-width="1" opacity="1"/>
+<rect x="1050.0" y="292" width="6.0" height="24" rx="1.2" fill="#22331B" stroke="none" stroke-width="1" opacity="1"/>
+<rect x="1058.2" y="292" width="6.0" height="24" rx="1.2" fill="#22331B" stroke="none" stroke-width="1" opacity="1"/>
+<rect x="1066.4" y="292" width="6.0" height="24" rx="1.2" fill="#22331B" stroke="none" stroke-width="1" opacity="1"/>
+<rect x="1074.6" y="292" width="6.0" height="24" rx="1.2" fill="#22331B" stroke="none" stroke-width="1" opacity="1"/>
+<rect x="1082.8" y="292" width="6.0" height="24" rx="1.2" fill="#22331B" stroke="none" stroke-width="1" opacity="1"/>
+<rect x="1091.0" y="292" width="6.0" height="24" rx="1.2" fill="#22331B" stroke="none" stroke-width="1" opacity="1"/>
+<text x="962" y="352" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="9.5" fill="#A7C7A0" text-anchor="start" font-weight="normal">引脚号:1 在屏体一端</text>
+<rect x="855" y="243" width="11" height="14" rx="2.5" fill="#111827" stroke="none" stroke-width="1" opacity="1"/>
+<text x="847" y="254.5" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="11.5" fill="#0F172A" text-anchor="end" font-weight="bold">1</text>
+<text x="874" y="249" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="13" fill="#F2F8EE" text-anchor="start" font-weight="bold">VSS</text>
+<text x="874" y="263" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="9.5" fill="#BBD6B4" text-anchor="start" font-weight="normal">电源地</text>
+<line x1="854" y1="250" x2="824" y2="250" stroke="#111827" stroke-width="2.4" stroke-linecap="round"/>
+<rect x="855" y="285" width="11" height="14" rx="2.5" fill="#DC2626" stroke="none" stroke-width="1" opacity="1"/>
+<text x="847" y="296.5" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="11.5" fill="#0F172A" text-anchor="end" font-weight="bold">2</text>
+<text x="874" y="291" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="13" fill="#F2F8EE" text-anchor="start" font-weight="bold">VDD</text>
+<text x="874" y="305" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="9.5" fill="#BBD6B4" text-anchor="start" font-weight="normal">电源 +3.3V</text>
+<line x1="854" y1="292" x2="824" y2="292" stroke="#DC2626" stroke-width="2.4" stroke-linecap="round"/>
+<rect x="855" y="327" width="11" height="14" rx="2.5" fill="#B45309" stroke="none" stroke-width="1" opacity="1"/>
+<text x="847" y="338.5" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="11.5" fill="#0F172A" text-anchor="end" font-weight="bold">3</text>
+<text x="874" y="333" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="13" fill="#F2F8EE" text-anchor="start" font-weight="bold">V0</text>
+<text x="874" y="347" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="9.5" fill="#E8C58A" text-anchor="start" font-weight="normal">对比度</text>
+<circle cx="838" cy="334" r="10" fill="#B45309"/>
+<text x="838" y="338.5" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="11.5" fill="#FFFFFF" text-anchor="middle" font-weight="bold">①</text>
+<rect x="855" y="369" width="11" height="14" rx="2.5" fill="#7C3AED" stroke="none" stroke-width="1" opacity="1"/>
+<text x="847" y="380.5" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="11.5" fill="#0F172A" text-anchor="end" font-weight="bold">4</text>
+<text x="874" y="375" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="13" fill="#F2F8EE" text-anchor="start" font-weight="bold">RS</text>
+<text x="874" y="389" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="9.5" fill="#BBD6B4" text-anchor="start" font-weight="normal">寄存器选择</text>
+<line x1="854" y1="376" x2="824" y2="376" stroke="#7C3AED" stroke-width="2.4" stroke-linecap="round"/>
+<rect x="855" y="411" width="11" height="14" rx="2.5" fill="#B45309" stroke="none" stroke-width="1" opacity="1"/>
+<text x="847" y="422.5" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="11.5" fill="#0F172A" text-anchor="end" font-weight="bold">5</text>
+<text x="874" y="417" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="13" fill="#F2F8EE" text-anchor="start" font-weight="bold">RW</text>
+<text x="874" y="431" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="9.5" fill="#E8C58A" text-anchor="start" font-weight="normal">接地(只写)</text>
+<circle cx="838" cy="418" r="10" fill="#B45309"/>
+<text x="838" y="422.5" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="11.5" fill="#FFFFFF" text-anchor="middle" font-weight="bold">②</text>
+<rect x="855" y="453" width="11" height="14" rx="2.5" fill="#2563EB" stroke="none" stroke-width="1" opacity="1"/>
+<text x="847" y="464.5" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="11.5" fill="#0F172A" text-anchor="end" font-weight="bold">6</text>
+<text x="874" y="459" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="13" fill="#F2F8EE" text-anchor="start" font-weight="bold">E</text>
+<text x="874" y="473" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="9.5" fill="#BBD6B4" text-anchor="start" font-weight="normal">使能</text>
+<line x1="854" y1="460" x2="824" y2="460" stroke="#2563EB" stroke-width="2.4" stroke-linecap="round"/>
+<rect x="855" y="495" width="11" height="14" rx="2.5" fill="#B9C1CE" stroke="none" stroke-width="1" opacity="1"/>
+<text x="847" y="506.5" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="11.5" fill="#475569" text-anchor="end" font-weight="normal">7</text>
+<text x="874" y="501" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="13" fill="#9FB79A" text-anchor="start" font-weight="normal">D0</text>
+<text x="874" y="515" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="9.5" fill="#7E9A79" text-anchor="start" font-weight="normal">不接</text>
+<rect x="855" y="537" width="11" height="14" rx="2.5" fill="#B9C1CE" stroke="none" stroke-width="1" opacity="1"/>
+<text x="847" y="548.5" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="11.5" fill="#475569" text-anchor="end" font-weight="normal">8</text>
+<text x="874" y="543" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="13" fill="#9FB79A" text-anchor="start" font-weight="normal">D1</text>
+<text x="874" y="557" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="9.5" fill="#7E9A79" text-anchor="start" font-weight="normal">不接</text>
+<rect x="855" y="579" width="11" height="14" rx="2.5" fill="#B9C1CE" stroke="none" stroke-width="1" opacity="1"/>
+<text x="847" y="590.5" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="11.5" fill="#475569" text-anchor="end" font-weight="normal">9</text>
+<text x="874" y="585" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="13" fill="#9FB79A" text-anchor="start" font-weight="normal">D2</text>
+<text x="874" y="599" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="9.5" fill="#7E9A79" text-anchor="start" font-weight="normal">不接</text>
+<rect x="855" y="621" width="11" height="14" rx="2.5" fill="#B9C1CE" stroke="none" stroke-width="1" opacity="1"/>
+<text x="847" y="632.5" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="11.5" fill="#475569" text-anchor="end" font-weight="normal">10</text>
+<text x="874" y="627" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="13" fill="#9FB79A" text-anchor="start" font-weight="normal">D3</text>
+<text x="874" y="641" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="9.5" fill="#7E9A79" text-anchor="start" font-weight="normal">不接</text>
+<rect x="855" y="663" width="11" height="14" rx="2.5" fill="#059669" stroke="none" stroke-width="1" opacity="1"/>
+<text x="847" y="674.5" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="11.5" fill="#0F172A" text-anchor="end" font-weight="bold">11</text>
+<text x="874" y="669" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="13" fill="#F2F8EE" text-anchor="start" font-weight="bold">D4</text>
+<text x="874" y="683" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="9.5" fill="#BBD6B4" text-anchor="start" font-weight="normal">数据 4</text>
+<line x1="854" y1="670" x2="824" y2="670" stroke="#059669" stroke-width="2.4" stroke-linecap="round"/>
+<rect x="855" y="705" width="11" height="14" rx="2.5" fill="#0891B2" stroke="none" stroke-width="1" opacity="1"/>
+<text x="847" y="716.5" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="11.5" fill="#0F172A" text-anchor="end" font-weight="bold">12</text>
+<text x="874" y="711" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="13" fill="#F2F8EE" text-anchor="start" font-weight="bold">D5</text>
+<text x="874" y="725" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="9.5" fill="#BBD6B4" text-anchor="start" font-weight="normal">数据 5</text>
+<line x1="854" y1="712" x2="824" y2="712" stroke="#0891B2" stroke-width="2.4" stroke-linecap="round"/>
+<rect x="855" y="747" width="11" height="14" rx="2.5" fill="#D97706" stroke="none" stroke-width="1" opacity="1"/>
+<text x="847" y="758.5" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="11.5" fill="#0F172A" text-anchor="end" font-weight="bold">13</text>
+<text x="874" y="753" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="13" fill="#F2F8EE" text-anchor="start" font-weight="bold">D6</text>
+<text x="874" y="767" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="9.5" fill="#BBD6B4" text-anchor="start" font-weight="normal">数据 6</text>
+<line x1="854" y1="754" x2="824" y2="754" stroke="#D97706" stroke-width="2.4" stroke-linecap="round"/>
+<rect x="855" y="789" width="11" height="14" rx="2.5" fill="#DB2777" stroke="none" stroke-width="1" opacity="1"/>
+<text x="847" y="800.5" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="11.5" fill="#0F172A" text-anchor="end" font-weight="bold">14</text>
+<text x="874" y="795" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="13" fill="#F2F8EE" text-anchor="start" font-weight="bold">D7</text>
+<text x="874" y="809" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="9.5" fill="#BBD6B4" text-anchor="start" font-weight="normal">数据 7</text>
+<line x1="854" y1="796" x2="824" y2="796" stroke="#DB2777" stroke-width="2.4" stroke-linecap="round"/>
+<rect x="855" y="831" width="11" height="14" rx="2.5" fill="#B45309" stroke="none" stroke-width="1" opacity="1"/>
+<text x="847" y="842.5" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="11.5" fill="#0F172A" text-anchor="end" font-weight="bold">15</text>
+<text x="874" y="837" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="13" fill="#F2F8EE" text-anchor="start" font-weight="bold">A</text>
+<text x="874" y="851" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="9.5" fill="#E8C58A" text-anchor="start" font-weight="normal">背光+</text>
+<circle cx="838" cy="838" r="10" fill="#B45309"/>
+<text x="838" y="842.5" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="11.5" fill="#FFFFFF" text-anchor="middle" font-weight="bold">③</text>
+<rect x="855" y="873" width="11" height="14" rx="2.5" fill="#111827" stroke="none" stroke-width="1" opacity="1"/>
+<text x="847" y="884.5" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="11.5" fill="#0F172A" text-anchor="end" font-weight="bold">16</text>
+<text x="874" y="879" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="13" fill="#F2F8EE" text-anchor="start" font-weight="bold">K</text>
+<text x="874" y="893" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="9.5" fill="#BBD6B4" text-anchor="start" font-weight="normal">背光−</text>
+<line x1="854" y1="880" x2="824" y2="880" stroke="#111827" stroke-width="2.4" stroke-linecap="round"/>
+<path d="M336,586 H400 V250 H824" fill="none" stroke="#111827" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="407" y="422.0" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="11" fill="#111827" text-anchor="start" font-weight="bold">GND</text>
+<path d="M400,586 V880 H824" fill="none" stroke="#111827" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="400" cy="586" r="4.2" fill="#111827"/>
+<text x="407" y="737.0" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="11" fill="#111827" text-anchor="start" font-weight="bold">GND</text>
+<path d="M336,628 H432 V292 H824" fill="none" stroke="#DC2626" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="439" y="464.0" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="11" fill="#DC2626" text-anchor="start" font-weight="bold">3V3</text>
+<path d="M432,628 V838 H600" fill="none" stroke="#DC2626" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="600" y="829" width="58" height="18" rx="4" fill="#FFFFFF" stroke="#DC2626" stroke-width="2.2" opacity="1"/>
+<text x="629" y="842.5" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="10.5" fill="#DC2626" text-anchor="middle" font-weight="bold">220Ω</text>
+<path d="M658,838 H824" fill="none" stroke="#DC2626" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="432" cy="628" r="4.2" fill="#DC2626"/>
+<text x="439" y="737.0" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="11" fill="#DC2626" text-anchor="start" font-weight="bold">3.3V</text>
+<path d="M336,376 H464 V796 H824" fill="none" stroke="#DB2777" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="471" y="590.0" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="11" fill="#DB2777" text-anchor="start" font-weight="bold">D7</text>
+<path d="M336,418 H496 V754 H824" fill="none" stroke="#D97706" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="503" y="590.0" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="11" fill="#D97706" text-anchor="start" font-weight="bold">D6</text>
+<path d="M336,460 H528 V712 H824" fill="none" stroke="#0891B2" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="535" y="590.0" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="11" fill="#0891B2" text-anchor="start" font-weight="bold">D5</text>
+<path d="M336,502 H624 V670 H824" fill="none" stroke="#059669" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="631" y="590.0" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="11" fill="#059669" text-anchor="start" font-weight="bold">D4</text>
+<path d="M336,670 H560 V376 H824" fill="none" stroke="#7C3AED" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="567" y="527.0" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="11" fill="#7C3AED" text-anchor="start" font-weight="bold">RS</text>
+<path d="M336,712 H592 V474 H810 V460 H824" fill="none" stroke="#2563EB" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="599" y="597.0" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="11" fill="#2563EB" text-anchor="start" font-weight="bold">E</text>
+<line x1="828" y1="494" x2="844" y2="510" stroke="#C2564B" stroke-width="2" stroke-linecap="round"/>
+<line x1="828" y1="510" x2="844" y2="494" stroke="#C2564B" stroke-width="2" stroke-linecap="round"/>
+<line x1="828" y1="536" x2="844" y2="552" stroke="#C2564B" stroke-width="2" stroke-linecap="round"/>
+<line x1="828" y1="552" x2="844" y2="536" stroke="#C2564B" stroke-width="2" stroke-linecap="round"/>
+<line x1="828" y1="578" x2="844" y2="594" stroke="#C2564B" stroke-width="2" stroke-linecap="round"/>
+<line x1="828" y1="594" x2="844" y2="578" stroke="#C2564B" stroke-width="2" stroke-linecap="round"/>
+<line x1="828" y1="620" x2="844" y2="636" stroke="#C2564B" stroke-width="2" stroke-linecap="round"/>
+<line x1="828" y1="636" x2="844" y2="620" stroke="#C2564B" stroke-width="2" stroke-linecap="round"/>
+<text x="336" y="158" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="12.5" fill="#0F172A" text-anchor="start" font-weight="bold">信号线 6 根 → IO03=D7 · IO10=D6 · IO06=D5 · IO07=D4 · IO05=RS · IO04=E</text>
+<text x="336" y="182" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="12" fill="#475569" text-anchor="start" font-weight="normal">电源 → 25=GND · 26=3.3V;GPIO11(24 号脚)✗ 不要用:默认是 flash 供电脚</text>
+<text x="336" y="206" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="12" fill="#475569" text-anchor="start" font-weight="normal">这 8 根线全部在板子右侧 20~28 号脚这一组里,紧挨你接过的 I2C 两根线(27/28)</text>
+<rect x="52" y="992" width="1076" height="262" rx="14" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1.4" opacity="1"/>
+<text x="72" y="1022" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="15" fill="#0F172A" text-anchor="start" font-weight="bold">细节:对比度 / 背光 / 其余几根线</text>
+<text x="76" y="1054" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="12.5" fill="#0F172A" text-anchor="start" font-weight="bold">① LCD 3 = V0:接电位器中间脚</text>
+<rect x="171" y="1100" width="22" height="84" rx="4" fill="#FFFFFF" stroke="#0F172A" stroke-width="2.2" opacity="1"/>
+<line x1="182" y1="1100" x2="182" y2="1080" stroke="#0F172A" stroke-width="2.2" stroke-linecap="round"/>
+<line x1="182" y1="1184" x2="182" y2="1204" stroke="#0F172A" stroke-width="2.2" stroke-linecap="round"/>
+<line x1="222" y1="1142" x2="194" y2="1142" stroke="#0F172A" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M194,1142 l10,-6 l0,12 z" fill="#0F172A"/>
+<text x="162" y="1147" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="11.5" fill="#0F172A" text-anchor="end" font-weight="bold">10kΩ</text>
+<text x="232" y="1086" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="11.5" fill="#DC2626" text-anchor="start" font-weight="normal">上端 → 3.3V</text>
+<text x="232" y="1210" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="11.5" fill="#111827" text-anchor="start" font-weight="normal">下端 → GND</text>
+<text x="232" y="1147" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="11.5" fill="#B45309" text-anchor="start" font-weight="bold">中间脚 → LCD 3</text>
+<text x="382" y="1054" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="12.5" fill="#0F172A" text-anchor="start" font-weight="bold">② 其余连线(②=LCD 5 RW 接地)</text>
+<text x="382" y="1084" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="12" fill="#0F172A" text-anchor="start" font-weight="bold">LCD 1  VSS</text>
+<text x="478" y="1084" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="12" fill="#111827" text-anchor="start" font-weight="bold">→ GND</text>
+<text x="382" y="1116" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="12" fill="#0F172A" text-anchor="start" font-weight="bold">LCD 2  VDD</text>
+<text x="478" y="1116" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="12" fill="#DC2626" text-anchor="start" font-weight="bold">→ 3.3V</text>
+<text x="382" y="1148" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="12" fill="#0F172A" text-anchor="start" font-weight="bold">LCD 5  RW</text>
+<text x="478" y="1148" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="12" fill="#111827" text-anchor="start" font-weight="bold">→ GND(直接接地,别悬空)</text>
+<text x="382" y="1180" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="12" fill="#0F172A" text-anchor="start" font-weight="bold">LCD 16 K</text>
+<text x="478" y="1180" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="12" fill="#111827" text-anchor="start" font-weight="bold">→ GND(背光−)</text>
+<text x="712" y="1054" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="12.5" fill="#0F172A" text-anchor="start" font-weight="bold">③ LCD 15 = A:背光正极</text>
+<text x="712" y="1122" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="12" fill="#DC2626" text-anchor="start" font-weight="bold">3.3V</text>
+<line x1="756" y1="1118" x2="786" y2="1118" stroke="#DC2626" stroke-width="2.2" stroke-linecap="round"/>
+<rect x="786" y="1109" width="58" height="18" rx="4" fill="#FFFFFF" stroke="#DC2626" stroke-width="2.2" opacity="1"/>
+<text x="815" y="1122.5" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="10.5" fill="#DC2626" text-anchor="middle" font-weight="bold">220Ω</text>
+<line x1="844" y1="1118" x2="888" y2="1118" stroke="#DC2626" stroke-width="2.2" stroke-linecap="round"/>
+<text x="894" y="1122" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="12" fill="#0F172A" text-anchor="start" font-weight="bold">LCD 15 (A)</text>
+<text x="712" y="1158" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="10.5" fill="#475569" text-anchor="start" font-weight="normal">屏板载已带限流电阻的可直连,偏暗就减小阻值</text>
+<text x="712" y="1182" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="10.5" fill="#B45309" text-anchor="start" font-weight="normal">背光别接 5V:LED 串联电阻是按 3.3V 选的</text>
+<text x="58" y="1288" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="14" fill="#475569" text-anchor="start" font-weight="normal">·</text>
+<text x="72" y="1288" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="12" fill="#475569" text-anchor="start" font-weight="normal">3.3V / GND 在板上有多组(13 / 17 / 18 / 25 / 26 / 32 号脚),就近取用即可。</text>
+<text x="58" y="1313" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="14" fill="#475569" text-anchor="start" font-weight="normal">·</text>
+<text x="72" y="1313" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="12" fill="#475569" text-anchor="start" font-weight="normal">不要用 24 号脚(PB_11 / GPIO11):它默认是 SPI flash 的供电脚,要烧 efuse 才能当 GPIO。</text>
+<text x="58" y="1338" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="14" fill="#475569" text-anchor="start" font-weight="normal">·</text>
+<text x="72" y="1338" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="12" fill="#475569" text-anchor="start" font-weight="normal">丝印对照:IO05 = I2C_SCL(接 RS)、IO04 = I2C_SDA(接 E);编号方向以实物丝印为准。</text>
+<text x="58" y="1363" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="14" fill="#475569" text-anchor="start" font-weight="normal">·</text>
+<text x="72" y="1363" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="12" fill="#475569" text-anchor="start" font-weight="normal">5V 款屏:整机 3.3V 实测可正常显示;若一定要给屏 VDD 接 5V,6 根信号线必须加 74HCT245 / TXS0108E。</text>
+<text x="58" y="1388" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="14" fill="#475569" text-anchor="start" font-weight="normal">·</text>
+<text x="72" y="1388" font-family="'Microsoft YaHei','Segoe UI',Arial,sans-serif" font-size="12" fill="#475569" text-anchor="start" font-weight="normal">烧录:按住板载 BOOT 键再上传;屏亮但只有一排方块 → 调①的电位器。PC 端软件无需改动。</text>
+</svg>
