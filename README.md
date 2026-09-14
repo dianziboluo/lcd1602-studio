@@ -68,6 +68,8 @@ Windows 10/11
 
 ### 接线(真屏)
 
+**方式 A(默认,I2C 转接板,4 根线):**
+
 | 转接板 | ESP32-C3 | 针脚 |
 |---|---|---|
 | VCC | 3.3V | 第 26 脚(或 18) |
@@ -77,9 +79,30 @@ Windows 10/11
 
 > 整机统一 3.3V 供电;屏亮但无字 → 调转接板蓝色电位器(对比度)。
 
+**方式 B(不要转接板,LCD 直连开发板并行 4 位,6 根信号线):**
+
+| LCD1602 | ESP32-C3 | 说明 |
+|---|---|---|
+| 1 VSS | GND | |
+| 2 VDD | 3.3V | 屏是 5V 款也能用 3.3V |
+| 3 V0 | 10k 电位器中间脚 | 另两脚接 3.3V / GND,调对比度 |
+| 4 RS | GPIO5 | |
+| 5 RW | GND | 只写,省一根线 |
+| 6 E | GPIO4 | |
+| 7~10 D0~D3 | 不接 | 4 位模式只用 D4~D7 |
+| 11~14 D4~D7 | GPIO6 / GPIO7 / GPIO10 / GPIO3 | |
+| 15 A | 3.3V 串 100~220Ω | 背光+ |
+| 16 K | GND | 背光− |
+
+> 固件里改一行 `#define LCD_DRIVER  LCD_DRIVER_PARALLEL` 即切换,**PC 端软件不用改**;
+> 并行驱动自包含(`firmware/LcdParallel.h`),**不需要安装 LiquidCrystal 库**。
+> 若把 LCD 的 VDD 接 5V,信号线必须加 74HCT245/TXS0108E 电平转换。
+> 详见 [HARDWARE.md](HARDWARE.md) 第 6 节。
+
 ## 固件烧录(Arduino IDE)
 
-1. `firmware/lcd_monitor.ino`;库:`LiquidCrystal_I2C`(YwRobot/PCF8574 版)
+1. `firmware/lcd_monitor.ino`;库:`LiquidCrystal_I2C`(YwRobot/PCF8574 版,仅方式 A 需要;
+   方式 B 直连并行不需要任何库)
 2. 工具菜单:开发板 `esp32 → AirM2M CORE ESP32C3`;**USB CDC On Boot = Enabled**
 3. 上传(此板自动下载电路不可靠时:按住板载 BOOT 键再点上传)
 

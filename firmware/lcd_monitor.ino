@@ -1,5 +1,5 @@
 /*
-  电脑状态监视器 - ESP32-C3 端固件 (合宙 AirM2M CORE ESP32C3)  v3 所见即所得
+  电脑状态监视器 - ESP32-C3 端固件 (合宙 AirM2M CORE ESP32C3)  v4 所见即所得
 
   主机端 (LCD1602 Studio) 通过 USB 串口每 1 秒下发渲染好的两行文本:
       L0,<滚动0/1>,<文本>\n       例: L0,0,CPU 32% SOC 45C
@@ -9,28 +9,64 @@
   兼容旧协议 (monitor.exe): C:<cpu占用>;S:<soc温度>;F:<风扇>;M:<内存>\n
       收到后会按 行1 CPU xx% SOC xxC / 行2 FAN xxxx RAM xx% 排版显示。
 
-  接线 (转接板 4 线连到开发板):
-     转接板 VCC -> 3.3V      (整机统一 3.3V 供电)
+  ============================ 两种接线方式 ============================
+  固件支持两套驱动, 只改下面 LCD_DRIVER 一行, PC 端软件完全不用改。
+
+  [方式 A] I2C 转接板 (PCF8574, 4 根线) —— LCD_DRIVER_I2C
+     转接板 VCC -> 3.3V      (整机统一 3.3V 供电, 屏和转接板一起 3.3V)
      转接板 GND -> GND
      转接板 SDA -> GPIO4     (I2C_SDA)
      转接板 SCL -> GPIO5     (I2C_SCL)
-  屏亮但没字: 调转接板上的蓝色电位器(对比度)。
+     屏亮但没字: 调转接板上的蓝色电位器(对比度)。
+
+  [方式 B] 直连并行 4 位 (无转接板, 6 根信号线) —— LCD_DRIVER_PARALLEL
+     不需要安装任何库: 固件自带极简 HD44780 驱动 (见 LcdParallel.h)。
+     LCD 1  VSS -> GND
+     LCD 2  VDD -> 3.3V
+     LCD 3  V0  -> 10k 电位器中间脚 (另两脚接 3.3V / GND, 调对比度)
+     LCD 4  RS  -> GPIO5
+     LCD 5  RW  -> GND          (只写模式, 省一根线)
+     LCD 6  E   -> GPIO4
+     LCD 7~10 D0~D3 -> 不接     (4 位模式只用 D4~D7)
+     LCD 11 D4  -> GPIO6
+     LCD 12 D5  -> GPIO7
+     LCD 13 D6  -> GPIO10
+     LCD 14 D7  -> GPIO3
+     LCD 15 A   -> 3.3V 串 100~220Ω (屏板载已有电阻的可直连)
+     LCD 16 K   -> GND
+     用到的脚避开了 GPIO2/8/9 (strapping + 串口0) 与 GPIO18/19 (USB)。
+     屏亮但没字/只有一排方块: 调电位器。若把 LCD 的 VDD 改成 5V 供电,
+     6 根信号线必须经电平转换 (74HCT245 或 TXS0108E), 否则超出 HD44780
+     的 VIH 规格 (=0.7×VDD=3.5V), 且 ESP32-C3 的 GPIO 不耐 5V。
 
   Arduino IDE 工具菜单:
      开发板          -> esp32 -> AirM2M CORE ESP32C3
      USB CDC On Boot -> Enabled      (必须,否则 Serial 不工作)
 */
 
-#include <Wire.h>
-#include <LiquidCrystal_I2C.h>
+// ==================== 显示驱动选择 (只改这一行) ====================
+#define LCD_DRIVER_I2C       0
+#define LCD_DRIVER_PARALLEL  1
+#define LCD_DRIVER  LCD_DRIVER_I2C      // 改成 LCD_DRIVER_PARALLEL 即直连(无转接板)
 
-const int I2C_SDA = 4;
-const int I2C_SCL = 5;
-const uint8_t LCD_ADDRS[] = {0x27, 0x3F};   // 转接板常见地址,自动探测
+#if LCD_DRIVER == LCD_DRIVER_I2C
+  #include <Wire.h>
+  #include <LiquidCrystal_I2C.h>
+  typedef LiquidCrystal_I2C LcdType;
+
+  const int  I2C_SDA = 4;
+  const int  I2C_SCL = 5;
+  const uint8_t LCD_ADDRS[] = {0x27, 0x3F};   // 转接板常见地址,自动探测
+  uint8_t lcdAddr = 0;
+#else
+  // 直连并行 4 位驱动: 见 LcdParallel.h (自包含, 不需要装库)
+  #include "LcdParallel.h"
+  typedef LcdParallel LcdType;
+#endif
+
 const unsigned long NO_DATA_MS = 5000;
 
-LiquidCrystal_I2C* lcd = NULL;
-uint8_t lcdAddr = 0;
+LcdType* lcd = NULL;
 
 // CGRAM 槽1: ℃ 自定义字形(与 GUI 模拟器同款; ° 用 ROM 的 0xDF)
 // 注意: HD44780 惯例是每行字节 高位(bit4)=最左列, 低位(bit0)=最右列
@@ -53,27 +89,38 @@ static String lineBuf;
 // 旧协议兼容
 int oldCpu = -1, oldSoc = -1, oldFan = -1, oldRam = -1;
 
-bool scanLcd() {
+// 驱动就绪检查: I2C 要探测转接板, 并口直接可用
+bool lcdReady() {
+#if LCD_DRIVER == LCD_DRIVER_I2C
   for (int i = 0; i < 2; i++) {
     Wire.beginTransmission(LCD_ADDRS[i]);
     if (Wire.endTransmission() == 0) { lcdAddr = LCD_ADDRS[i]; return true; }
   }
   return false;
+#else
+  return true;
+#endif
 }
 
 void setup() {
   Serial.begin(115200);
+
+#if LCD_DRIVER == LCD_DRIVER_I2C
   Wire.begin(I2C_SDA, I2C_SCL);   // 必须主动指定引脚(ESP32-C3 默认是 8/9)
   delay(50);
-
   Serial.println("\n[monitor] boot, scanning I2C...");
-  while (!scanLcd()) {
+  while (!lcdReady()) {
     Serial.println("LCD not found, retry in 2s (check wiring)");
     delay(2000);
   }
   Serial.printf("LCD found @ 0x%02X\n", lcdAddr);
+  lcd = new LcdType(lcdAddr, 16, 2);
+#else
+  lcdReady();
+  lcd = new LcdType(PIN_RS, PIN_EN, PIN_D4, PIN_D5, PIN_D6, PIN_D7);
+  Serial.println("\n[monitor] boot, parallel 4-bit (RS/EN/D4-D7)");
+#endif
 
-  lcd = new LiquidCrystal_I2C(lcdAddr, 16, 2);
   // 调用 begin() 而非 init() —— init() 内部会 Wire.begin() 把引脚重置回默认
   lcd->begin(16, 2);
   uint8_t empty[8] = {0, 0, 0, 0, 0, 0, 0, 0};
@@ -83,7 +130,7 @@ void setup() {
       d[i] = s == 1 ? bitRev5(CGRAM_CELSIUS[i]) : empty[i];
     lcd->createChar(s, d);   // 槽1 默认 ℃, 其余空白
   }
-  lcd->backlight();
+  lcd->backlight();          // I2C 转接板开背光; 并口模式此调用为空操作
   lcd->setCursor(0, 0);
   lcd->print("Wait for PC data ");
 }

@@ -80,6 +80,8 @@ adapter → yellow-green LCD1602A, displaying the user's custom template
 
 ### Wiring (real LCD)
 
+**Option A (default, I2C adapter, 4 wires):**
+
 | Adapter | ESP32-C3 | Pin |
 |---|---|---|
 | VCC | 3.3V | pin 26 (or 18) |
@@ -90,9 +92,31 @@ adapter → yellow-green LCD1602A, displaying the user's custom template
 > Whole module powered at 3.3V; if the screen is lit but blank, turn the blue contrast
 > potentiometer on the adapter.
 
+**Option B (no adapter, LCD wired straight to the board in 4-bit parallel, 6 signal wires):**
+
+| LCD1602 | ESP32-C3 | Note |
+|---|---|---|
+| 1 VSS | GND | |
+| 2 VDD | 3.3V | a 5V-spec panel also works at 3.3V |
+| 3 V0 | 10k pot wiper | pot ends to 3.3V / GND, contrast |
+| 4 RS | GPIO5 | |
+| 5 RW | GND | write-only, saves a wire |
+| 6 E | GPIO4 | |
+| 7~10 D0~D3 | not connected | 4-bit mode uses D4~D7 only |
+| 11~14 D4~D7 | GPIO6 / GPIO7 / GPIO10 / GPIO3 | |
+| 15 A | 3.3V via 100~220Ω | backlight+ |
+| 16 K | GND | backlight− |
+
+> Switch with one firmware line: `#define LCD_DRIVER  LCD_DRIVER_PARALLEL` — **the PC-side
+> software needs no change**. The parallel driver is self-contained
+> (`firmware/LcdParallel.h`) and **needs no LiquidCrystal library**. If you feed the LCD's
+> VDD from 5V, the signal lines must go through a 74HCT245/TXS0108E level shifter.
+> Details: [HARDWARE.en.md](HARDWARE.en.md) section 6.
+
 ## Firmware flashing (Arduino IDE)
 
-1. `firmware/lcd_monitor.ino`; library: `LiquidCrystal_I2C` (YwRobot/PCF8574 version)
+1. `firmware/lcd_monitor.ino`; library: `LiquidCrystal_I2C` (YwRobot/PCF8574 version —
+   only needed for option A; the direct parallel mode needs no library at all)
 2. Tools menu: board `esp32 → AirM2M CORE ESP32C3`; **USB CDC On Boot = Enabled**
 3. Upload (if the auto-download circuit fails: hold the onboard BOOT button and click Upload)
 
