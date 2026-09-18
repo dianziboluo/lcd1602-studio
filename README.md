@@ -106,6 +106,11 @@ Windows 10/11
 > 另有纯矢量版 [docs/wiring.svg](docs/wiring.svg)(不含第三方图片,可自行分发/打印);
 > 官方脚位图版权归合宙所有,来源已标注在图内与 [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md)。
 
+**面包板搭法(开发板插上沿、LCD 插下沿,同一块 170 孔面包板上)** ——
+按实物插孔位置逐条标了 12 根线该插哪一列哪一排:
+
+![面包板接线图](docs/breadboard_wiring.png)
+
 ## 固件烧录(Arduino IDE)
 
 1. `firmware/lcd_monitor.ino`;库:`LiquidCrystal_I2C`(YwRobot/PCF8574 版,仅方式 A 需要;

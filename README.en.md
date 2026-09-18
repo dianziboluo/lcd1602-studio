@@ -121,6 +121,12 @@ adapter → yellow-green LCD1602A, displaying the user's custom template
 > imagery, safe to redistribute/print). The official pinout diagram is copyright 合宙;
 > see [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md).
 
+**Breadboard build (dev board plugged at the top edge, LCD at the bottom edge of the same
+170-point breadboard)** — every one of the 12 jumpers is drawn into its exact hole
+(Chinese captions): [docs/breadboard_wiring.png](docs/breadboard_wiring.png)
+
+![Breadboard wiring diagram](docs/breadboard_wiring.png)
+
 ## Firmware flashing (Arduino IDE)
 
 1. `firmware/lcd_monitor.ino`; library: `LiquidCrystal_I2C` (YwRobot/PCF8574 version —
